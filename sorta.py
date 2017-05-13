@@ -75,7 +75,7 @@ def listFiles(path):
 			#print(onlyfiles[i])
 			extenstion_check = onlyfiles[i]
 			if not extenstion_check.endswith('.py'):
-				r1 = re.compile("(\.pdf)|(\.txt)$|(\.lk)$")  # Only Move these extensions
+				r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  # Only Move these extensions
 				if r1.search(onlyfiles[i]):
 					#print "yes"
 					#print(onlyfiles[i])
