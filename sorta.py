@@ -32,20 +32,6 @@ version = '1.0'
 date_released = 'May 11th 2017'
 
 
-def menu():
-	print ("*** Sorta v0.1 ALPHA ****")
-
-	print ("You are working from the current directory:",getCurrentDirectory())
-	option = raw_input('Do you want to continue? y/N: ')
-
-	if option == "n" or option == "":
-		directory_chose = raw_input('Please enter path e.g (C://User..): ')
-		print ("CHOOSEN: "+directory_chose)
-		option_2 = raw_input('Is the path correct? Y/n: ')
-		if option_2 == "y" or option_2 == "":
-			listFiles(directory_chose)
-
-
 def getCurrentDirectory():
 	dirPath = os.getcwd()
 	return dirPath
@@ -70,62 +56,33 @@ def listFiles(path):
 	for i in bar(range(load)):
 		time.sleep(1.0)
 
-
 		while i < len(onlyfiles):
 			#print(onlyfiles[i])
 			extenstion_check = onlyfiles[i]
 			if not extenstion_check.endswith('.py'):
-				r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  # Only Move these extensions
+				r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  
 				if r1.search(onlyfiles[i]):
-					#print "yes"
-					#print(onlyfiles[i])
-
 					match(regex,onlyfiles[i])
 					f += 1
 			i += 1
 	print "Processed "+str(f)+" files/folders"		
-		
-            #yield file
 
-
-#Function to move file | Takes in title, Season & raw Filename	
+	
 def move(title, s, f):
 	source = directory_chose+'\\'+f
 	directory_tree = directory_chose+'\\'+title+'\\Season '+s
-	#dest1 = directory_chose+'/'+title+'/Season '+s+'/'+f
-	#print (directory_tree)
+	
 	dest = directory_tree+"\\"+f
-	#print "Moving '"+f+"' into the folder '"+title+"' under Season '"+s+"'"
-	#print "directory_tree:"+directory_tree
-	#print "Processing: "+f
 
 	if not os.path.exists(directory_tree):
-
-		#print "making directory tree....."
-		os.makedirs(directory_tree)
 		
-		
+		os.makedirs(directory_tree)			
 		shutil.move(source,dest)
-	
-		#print (source)
-		#print (dest)
-	
-		
+
 	if os.path.exists(directory_tree):
 		
 		if not os.path.exists(dest):
-			#print("Yep")
 			os.rename(source, dest)
-
-		#print (dest)
-	
-	
-		#print (directory_tree+"/"+f)
-		#os.rename(source, directory_tree+"/"+f)
-	#if not os.path.exists(directory_tree):
-		#os.mkdir(directory_tree)
-
-	#shutil.move(source, dest1)
 
 
 def moveE(t, s, e):
@@ -142,10 +99,6 @@ def moveE(t, s, e):
 	elif s.startswith("s"):
 		s = s.replace("s", "")
 
-
-	#print "Path"+directory_chose
-	#print "Moving to folder:"+t.title()+"/Season "+s+"/"+e
-	#print ("QQ:"+t.title().rstrip())
 	move(t.title().rstrip(), s, e)
 
 
@@ -158,7 +111,7 @@ def match(regex, test_str):
 
 	for matchNum, match in enumerate(matches):
 		matchNum = matchNum + 1
-		#print ("Match {matchNum} was found at {start}-{end}: {match}".format(matchNum = matchNum, start = match.start(), end = match.end(), match = match.group()))
+
 		string_tv = ("{match}".format(match = match.group()))
 		
 		if re.match("s[0-9][1-9]|s[0-9]", string_tv):
@@ -219,7 +172,7 @@ def auto():
 
 
 if __name__ == '__main__':
-	#global directory_chose
+
 	parameter = (sys.argv)
 	
 	if '-v' in parameter or '--version' in parameter:
@@ -239,27 +192,4 @@ if __name__ == '__main__':
 			print "Goodbye...."
 
 	else:
-		auto()
-		
-def loadbar():
-
-	toolbar_width = 40
-
-	# setup toolbar
-	sys.stdout.write("[%s]" % (" " * toolbar_width))
-	sys.stdout.flush()
-	sys.stdout.write("\b" * (toolbar_width+1)) # return to start of line, after '['
-	
-	for i in xrange(toolbar_width):
-	    time.sleep(0.1) # do real work here
-	    # update the bar
-	    sys.stdout.write("*")
-	    sys.stdout.flush()
-	
-	sys.stdout.write("\n")
-
-def prog():
-	bar = progressbar.ProgressBar()
-	for i in bar(range(100)):
-		time.sleep(0.02)
-
+		auto()		
