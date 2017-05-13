@@ -16,7 +16,7 @@ import sys, getopt
 import time
 import sys
 import time
-import progressbar
+#import progressbar
 
 
 regex = r"(?i)(S[0-9][0-9]|E[0-9][0-9])|(s[0-9]|e[0-9])|(.+?(?=S[0-9]|[0-9]))"
@@ -52,9 +52,9 @@ def listFiles(path):
 	if len(onlyfiles) == 1:
 		print("No files to sort....goodbye")
 
-	bar = progressbar.ProgressBar()
+	#bar = progressbar.ProgressBar()
 	for i in bar(list(range(load))):
-		time.sleep(1.0)
+		#time.sleep(1.0)
 
 		while i < len(onlyfiles):
 			#print(onlyfiles[i])
