@@ -16,7 +16,7 @@ File (Creates This Folder)
 
 ### Installation
 
-SorTA requires Python3.5 to run.
+SorTA requires Python2 to run.
 
 ```sh
 user@host: sorta.py -p "c:/files"
