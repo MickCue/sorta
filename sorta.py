@@ -19,8 +19,8 @@ import time
 #import progressbar
 
 
-regex = r"(?i)(S[0-9][0-9]|E[0-9][0-9])|(s[0-9]|e[0-9])|(.+?(?=S[0-9]|[0-9]))"
-
+#regex = r"(?i)(S[0-9][0-9]|E[0-9][0-9])|(s[0-9]|e[0-9])|(.+?(?=S[0-9]|[0-9]))"
+regex = r"(?i)(.+?(?=S[0-9])|(S[0-9][0-9])|s[0-9])"
 s_letter = ""
 e_letter = ""
 tt_string = ""
@@ -53,18 +53,19 @@ def listFiles(path):
 		print("No files to sort....goodbye")
 
 	#bar = progressbar.ProgressBar()
-	for i in bar(list(range(load))):
+	#for i in bar(list(range(load))):
 		#time.sleep(1.0)
 
-		while i < len(onlyfiles):
+	while i < len(onlyfiles):
 			#print(onlyfiles[i])
-			extenstion_check = onlyfiles[i]
-			if not extenstion_check.endswith('.py'):
-				r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  
-				if r1.search(onlyfiles[i]):
-					match(regex,onlyfiles[i])
-					f += 1
-			i += 1
+		extenstion_check = onlyfiles[i]
+		if not extenstion_check.endswith('.py'):
+			r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  
+			if r1.search(onlyfiles[i]):
+				#
+				match(regex,onlyfiles[i])
+				f += 1
+		i += 1
 	print("Processed "+str(f)+" files/folders")		
 
 	
@@ -114,6 +115,8 @@ def match(regex, test_str):
 
 		string_tv = ("{match}".format(match = match.group()))
 		
+		#print ("string_tv:"+string_tv)
+
 		if re.match("s[0-9][1-9]|s[0-9]", string_tv):
 			s_letter = ("{match}".format(match = match.group()))
 		elif re.match("S[0-9][1-9]|S[0-9]", string_tv):
@@ -126,6 +129,7 @@ def match(regex, test_str):
 			tt_string = ("{match}".format(match = match.group()))
 
 	if not cleanTitle(tt_string) == "":
+		#print ("Got this title:"+cleanTitle(tt_string))
 		moveE(cleanTitle(tt_string), s_letter, test_str)
 
 		
