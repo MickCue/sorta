@@ -9,9 +9,9 @@ SorTA is a powerful file sorter that will match **file.s01e01** and move it into
 file.s01e01 will be sorted as follows:
 
 file.s01e01 (Removed From Here)
-&nbsp;&nbsp;**File** (Creates This Folder)
-&nbsp;&nbsp;&nbsp;&nbsp;**Season 1** (Creates This Folder)
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**file.s01e01** (Dropped Here)
+File (Creates This Folder)
+Season 1 (Creates This Folder)
+file.s01e01 (Dropped Here)
 
 ___
 ### Installation
