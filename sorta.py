@@ -149,8 +149,11 @@ def match(regex, test_str):
 			tt_string = ("{match}".format(match = match.group()))
 
 	if not cleanTitle(tt_string) == "":
-		#print ("Got this title:"+cleanTitle(tt_string))
+		#print ("Got this title:"+cleanTitle(tt_string)+" and s_letter"+s_letter)
 		moveE(cleanTitle(tt_string), s_letter, test_str)
+		tt_string = ""
+		s_letter = ""
+
 
 		
 def logo():
