@@ -1,25 +1,27 @@
 # SorTA - Powerful Sorter
 
-SorTA is a powerful file sorter that will match **file.s01e01** and move it into the folder **file**->**s1**.
-
-  - Takes in location parameter
-  - Creates diretory stucture based on filename
-  - Moves files
+SorTA is a powerful file sorter that will match **file.s01e01** and sort it into folders based on the Name and Season.
 
 file.s01e01 will be sorted as follows:
 
-file.s01e01 (Removed From Here)
-File (Creates This Folder)
-Season 1 (Creates This Folder)
-file.s01e01 (Dropped Here)
+ - file.s01e01 (Removed)
+ - File (Creates This Folder) 
+ - Season 1 (Creates This sub-folder) 
+ - File/Season 1/file.s01e01 (File Dropped Here)
 
 ___
 ### Installation
 
 SorTA requires Python v3 to run.
 
+Specify path to sort:
+
 ```sh
 user@host: sorta.py -p "c:/files"
+```
+Automatically sort current working directory:
+```sh
+user@host: sorta.py 
 ```
 
 ___
