@@ -189,7 +189,7 @@ def auto():
 
 def checkPy():
     if sys.version_info[:2] <= (2, 9):
-        print(goodbye_msg)
+        print(goodbye_msg+" Python v3 is needed to run this script!")
         sys.exit()
 
 
