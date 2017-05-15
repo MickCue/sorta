@@ -25,6 +25,9 @@ s_letter = ""
 e_letter = ""
 tt_string = ""
 directory_chose = ""
+directory_tree = ""
+dest = ""
+source = ""
 
 load = 0
 
@@ -68,13 +71,30 @@ def listFiles(path):
 		i += 1
 	print("Processed "+str(f)+" files/folders")		
 
-	
-def move(title, s, f):
-	source = directory_chose+'\\'+f
-	directory_tree = directory_chose+'\\'+title+'\\Season '+s
-	
-	dest = directory_tree+"\\"+f
 
+def isWin(title, s, f):
+	global dest
+	global directory_tree
+	global source
+	if os.name == 'nt':
+		#print ("Windows OS")
+		source = directory_chose+'\\'+f
+		directory_tree = directory_chose+'\\'+title+'\\Season '+s
+		dest = directory_tree+"\\"+f
+
+	else:
+		#print ("Linux")
+		source = directory_chose+'/'+f
+		directory_tree = directory_chose+'/'+title+'/Season '+s
+		dest = directory_tree+"/"+f
+
+
+def move(title, s, f):
+	#source = directory_chose+'\\'+f
+	#directory_tree = directory_chose+'\\'+title+'\\Season '+s
+	
+	#dest = directory_tree+"\\"+f
+	isWin(title, s, f)	
 	if not os.path.exists(directory_tree):
 		
 		os.makedirs(directory_tree)			
@@ -173,10 +193,13 @@ def auto():
 	else:
 		print("Goodbye....")
 
+
+
 def checkPy():
     if sys.version_info[:2] <= (2, 9):
         print("Goodbye....")
         sys.exit()
+
 
 
 if __name__ == '__main__':
