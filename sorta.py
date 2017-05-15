@@ -16,10 +16,8 @@ import sys, getopt
 import time
 import sys
 import time
-#import progressbar
 
 
-#regex = r"(?i)(S[0-9][0-9]|E[0-9][0-9])|(s[0-9]|e[0-9])|(.+?(?=S[0-9]|[0-9]))"
 regex = r"(?i)(.+?(?=S[0-9])|(S[0-9][0-9])|s[0-9])"
 s_letter = ""
 e_letter = ""
@@ -28,6 +26,7 @@ directory_chose = ""
 directory_tree = ""
 dest = ""
 source = ""
+goodbye_msg = "Goodbye..."
 
 load = 0
 
@@ -47,28 +46,23 @@ def cleanTitle(name):
 
 def listFiles(path):
 	onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
-	#print (onlyfiles)
 	i = 0
 	f = 0
 	global load
 	load = len(onlyfiles)
 	if len(onlyfiles) == 1:
-		print("No files to sort....goodbye")
-
-	#bar = progressbar.ProgressBar()
-	#for i in bar(list(range(load))):
-		#time.sleep(1.0)
+		print(goodbye_msg)
 
 	while i < len(onlyfiles):
-			#print(onlyfiles[i])
+
 		extenstion_check = onlyfiles[i]
 		if not extenstion_check.endswith('.py'):
 			r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  
-			if r1.search(onlyfiles[i]):
-				#
+			if r1.search(onlyfiles[i]):			
 				match(regex,onlyfiles[i])
 				f += 1
 		i += 1
+
 	print("Processed "+str(f)+" files/folders")		
 
 
@@ -77,23 +71,20 @@ def isWin(title, s, f):
 	global directory_tree
 	global source
 	if os.name == 'nt':
-		#print ("Windows OS")
+		
 		source = directory_chose+'\\'+f
 		directory_tree = directory_chose+'\\'+title+'\\Season '+s
 		dest = directory_tree+"\\"+f
 
 	else:
-		#print ("Linux")
+		
 		source = directory_chose+'/'+f
 		directory_tree = directory_chose+'/'+title+'/Season '+s
 		dest = directory_tree+"/"+f
 
 
 def move(title, s, f):
-	#source = directory_chose+'\\'+f
-	#directory_tree = directory_chose+'\\'+title+'\\Season '+s
-	
-	#dest = directory_tree+"\\"+f
+
 	isWin(title, s, f)	
 	if not os.path.exists(directory_tree):
 		
@@ -108,13 +99,12 @@ def move(title, s, f):
 
 def moveE(t, s, e):
 
-	#Strip Zero
 	if s.startswith("S0"):
 		s = s.replace("S0", "")
 	elif s.startswith("s0"):
 		s = s.replace("s0", "")
 
-	#Strip Season
+
 	if s.startswith("S"):
 		s = s.replace("S", "")
 	elif s.startswith("s"):
@@ -135,7 +125,6 @@ def match(regex, test_str):
 
 		string_tv = ("{match}".format(match = match.group()))
 		
-		#print ("string_tv:"+string_tv)
 
 		if re.match("s[0-9][1-9]|s[0-9]", string_tv):
 			s_letter = ("{match}".format(match = match.group()))
@@ -149,7 +138,7 @@ def match(regex, test_str):
 			tt_string = ("{match}".format(match = match.group()))
 
 	if not cleanTitle(tt_string) == "":
-		#print ("Got this title:"+cleanTitle(tt_string)+" and s_letter"+s_letter)
+
 		moveE(cleanTitle(tt_string), s_letter, test_str)
 		tt_string = ""
 		s_letter = ""
@@ -188,19 +177,19 @@ def auto():
 		if option_4 == "y" or option_4 == "":
 			listFiles(directory_chose_1)
 		else:
-			print("Goodbye....")
+			print(goodbye_msg)
 	elif option_3 == "q":
-		print("Goodbye....")
+		print(goodbye_msg)
 		quit()
 
 	else:
-		print("Goodbye....")
+		print(goodbye_msg)
 
 
 
 def checkPy():
     if sys.version_info[:2] <= (2, 9):
-        print("Goodbye....")
+        print(goodbye_msg)
         sys.exit()
 
 
@@ -223,7 +212,7 @@ if __name__ == '__main__':
 		if option_2 == "y" or option_2 == "":
 			listFiles(directory_chose)
 		else:
-			print("Goodbye....")
+			print(goodbye_msg)
 
 	else:
 		auto()		
