@@ -1,4 +1,4 @@
-# A Python program with some comments
+# A Python script that will sort TV show files into folders
 
 # Program name - sorta.py
 # Written by - Philip McHugh (mickcue@gmail.com)
