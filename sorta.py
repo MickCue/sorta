@@ -173,10 +173,14 @@ def auto():
 	else:
 		print("Goodbye....")
 
+def checkPy():
+    if sys.version_info[:2] <= (2, 9):
+        print("Goodbye....")
+        sys.exit()
 
 
 if __name__ == '__main__':
-
+	checkPy()
 	parameter = (sys.argv)
 	
 	if '-v' in parameter or '--version' in parameter:
