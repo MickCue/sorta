@@ -1,10 +1,3 @@
-# A Python script that will sort TV show files into folders
-
-# Program name - sorta.py
-# Written by - Philip McHugh (mickcue@gmail.com)
-# Date:  May 11th 2017
-# Version: v1.0
-
 import re
 import argparse
 import shutil
@@ -32,7 +25,7 @@ load = 0
 
 
 #{Release}{Minor}{Month}{Build}
-version = '1.1.5.01'
+version = '1.1.5.02'
 date_released = 'May 16th 2017'
 
 
@@ -41,13 +34,13 @@ def getCurrentDirectory():
 	return dirPath
 
 
-#Use This Method For Check If Directory Already In == TV Show Title
 def checkDirectoryName(title):
-	path = os.getcwd()
-	directory_name = os.path.basename(path)
-	if directory_name == title:
+
+	directory_name = os.path.basename(directory_chose)
+	
+	if directory_name == title:		
 		return True
-	else:
+	else:		
 		return False
 
 
@@ -85,21 +78,30 @@ def isWin(title, s, f):
 	global source
 
 
-	#if checkDirectoryName(title) == True:
-	#	print("checkDirectoryName==True")
+	if checkDirectoryName(title) == True:
+		if os.name == 'nt':
+			source = directory_chose+'\\'+f
+			directory_tree = directory_chose+'\\Season '+s
+			dest = directory_tree+"\\"+f
+		else:
+	
+			source = directory_chose+'/'+f
+			directory_tree = directory_chose+'/Season '+s
+			dest = directory_tree+"/"+f
 
-
-	if os.name == 'nt':
+	elif checkDirectoryName(title) != True:
+		print("Getting Here")
+		if os.name == 'nt':
 		
-		source = directory_chose+'\\'+f
-		directory_tree = directory_chose+'\\'+title+'\\Season '+s
-		dest = directory_tree+"\\"+f
-
-	else:
-		
-		source = directory_chose+'/'+f
-		directory_tree = directory_chose+'/'+title+'/Season '+s
-		dest = directory_tree+"/"+f
+			source = directory_chose+'\\'+f
+			directory_tree = directory_chose+'\\'+title+'\\Season '+s
+			dest = directory_tree+"\\"+f
+	
+		else:
+	
+			source = directory_chose+'/'+f
+			directory_tree = directory_chose+'/'+title+'/Season '+s
+			dest = directory_tree+"/"+f
 
 
 def move(title, s, f):
@@ -111,7 +113,7 @@ def move(title, s, f):
 		shutil.move(source,dest)
 
 	if os.path.exists(directory_tree):
-		
+		print("Moving '"+source+"' to dest '"+dest)
 		if not os.path.exists(dest):
 			os.rename(source, dest)
 
