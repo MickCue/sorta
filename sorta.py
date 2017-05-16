@@ -83,6 +83,12 @@ def isWin(title, s, f):
 	global dest
 	global directory_tree
 	global source
+
+
+	#if checkDirectoryName(title) == True:
+	#	print("checkDirectoryName==True")
+
+
 	if os.name == 'nt':
 		
 		source = directory_chose+'\\'+f
