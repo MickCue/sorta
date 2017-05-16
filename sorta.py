@@ -113,7 +113,7 @@ def move(title, s, f):
 		shutil.move(source,dest)
 
 	if os.path.exists(directory_tree):
-		print("Moving '"+source+"' to dest '"+dest)
+		
 		if not os.path.exists(dest):
 			os.rename(source, dest)
 
