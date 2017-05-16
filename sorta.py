@@ -40,6 +40,17 @@ def getCurrentDirectory():
 	dirPath = os.getcwd()
 	return dirPath
 
+
+#Use This Method For Check If Directory Already In == TV Show Title
+def checkDirectoryName(title):
+	path = os.getcwd()
+	directory_name = os.path.basename(path)
+	if directory_name == title:
+		return True
+	else:
+		return False
+
+
 def cleanTitle(name):
 	tmp_name = name.replace(".", " ")
 	tmp_name = tmp_name.replace("-", " ")
