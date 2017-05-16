@@ -30,8 +30,10 @@ goodbye_msg = "Goodbye..."
 
 load = 0
 
-version = '1.0'
-date_released = 'May 11th 2017'
+
+#{Release}{Minor}{Month}{Build}
+version = '1.1.5.01'
+date_released = 'May 16th 2017'
 
 
 def getCurrentDirectory():
