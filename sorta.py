@@ -1,3 +1,6 @@
+#!/usr/bin/python
+
+
 import re
 import argparse
 import shutil
@@ -25,7 +28,7 @@ load = 0
 
 
 #{Release}{Minor}{Month}{Build}
-version = '1.1.5.03'
+version = '1.1.5.04'
 date_released = 'May 16th 2017'
 
 
