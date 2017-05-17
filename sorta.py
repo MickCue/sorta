@@ -17,7 +17,7 @@ import time
 regex = r"(?i)(.+?(?=S[0-9])|(S[0-9][0-9])|s[0-9])"
 s_letter = ""
 e_letter = ""
-tt_string = ""
+title_name = ""
 directory_chose = ""
 directory_tree = ""
 dest = ""
@@ -28,7 +28,7 @@ load = 0
 
 
 #{Release}{Minor}{Month}{Build}
-version = '1.1.5.04'
+version = '1.1.5.05'
 date_released = 'May 16th 2017'
 
 
@@ -140,7 +140,7 @@ def removeLetter_S(t, s, e):
 def match(regex, test_str):
 	
 	matches = re.finditer(regex, test_str)
-	global tt_string
+	global title_name
 	global s_letter
 
 
@@ -159,12 +159,12 @@ def match(regex, test_str):
 		elif re.match("e[0-9][1-9]|e[0-9]", string_tv):
 			e_letter = ("{match}".format(match = match.group()))
 		else:
-			tt_string = ("{match}".format(match = match.group()))
+			title_name = ("{match}".format(match = match.group()))
 
-	if not cleanTitle(tt_string) == "":
+	if not cleanTitle(title_name) == "":
 
-		removeLetter_S(cleanTitle(tt_string), s_letter, test_str)
-		tt_string = ""
+		removeLetter_S(cleanTitle(title_name), s_letter, test_str)
+		title_name = ""
 		s_letter = ""
 
 
