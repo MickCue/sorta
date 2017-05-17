@@ -25,7 +25,7 @@ load = 0
 
 
 #{Release}{Minor}{Month}{Build}
-version = '1.1.5.02'
+version = '1.1.5.03'
 date_released = 'May 16th 2017'
 
 
@@ -90,7 +90,7 @@ def isWin(title, s, f):
 			dest = directory_tree+"/"+f
 
 	elif checkDirectoryName(title) != True:
-		print("Getting Here")
+		
 		if os.name == 'nt':
 		
 			source = directory_chose+'\\'+f
@@ -118,7 +118,7 @@ def move(title, s, f):
 			os.rename(source, dest)
 
 
-def moveE(t, s, e):
+def removeLetter_S(t, s, e):
 
 	if s.startswith("S0"):
 		s = s.replace("S0", "")
@@ -160,7 +160,7 @@ def match(regex, test_str):
 
 	if not cleanTitle(tt_string) == "":
 
-		moveE(cleanTitle(tt_string), s_letter, test_str)
+		removeLetter_S(cleanTitle(tt_string), s_letter, test_str)
 		tt_string = ""
 		s_letter = ""
 
