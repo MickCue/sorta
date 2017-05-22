@@ -31,11 +31,11 @@ ___
 ___
 ### Future development
 Priority[1-3]
-- Check for script updates [3]
-- Move files to another specified location [2]
-- Check filesize and replace smaller file[Optional Command] [2]
-- Move inside folder based on season filename...e.g filname12>sunday.s03e01>>>>>>Season 3>filename12.s03e01 [1] **ADDED Feature**
-- Append move date to filename [Optional Command] [2]
+- S01:Check for script updates [3]
+- S02:Move files to another specified location [2]
+- S03:Check filesize and replace smaller file[Optional Command] [2]
+- S04:Sort folders with the file.s01e01 name/ Move to specified folder after implementing S02 [3]
+- S05:Append move date to filename [Optional Command] [2]
 
 ___
 ### Author
