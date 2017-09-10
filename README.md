@@ -27,7 +27,7 @@ user@host: sorta.py
 ___
 ### Version History
 
-**Current version:** v1.0  - 11th March 2017
+**Current version:** v1.1  -  10th Sept 2017
 ___
 ### Future development
 Priority[1-3]
