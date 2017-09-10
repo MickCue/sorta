@@ -27,9 +27,9 @@ goodbye_msg = "Goodbye..."
 load = 0
 
 
-#{Release}{Minor}{Month}{Build}
-version = '1.1.5.05'
-date_released = 'May 16th 2017'
+#{Release}{Minor}{Month}
+version = '1.1.9'
+date_released = 'Sept 10th 2017'
 
 
 def getCurrentDirectory():
@@ -189,7 +189,7 @@ def auto():
 	global directory_chose
 	print("\nCurrent Directory: "+getCurrentDirectory())
 	option_3 = input("Sort current directory?  Y/n/q: ")
-	if option_3 == "y" or option_3 == "":
+	if option_3 == "y" or option_3 == "Y" or option_3 == "":
 		
 		directory_chose = getCurrentDirectory()		
 		listFiles(getCurrentDirectory())
@@ -198,7 +198,7 @@ def auto():
 		directory_chose = directory_chose_1
 		print(("CHOOSEN: "+directory_chose_1))
 		option_4 = input('Is the path correct? Y/n: ')
-		if option_4 == "y" or option_4 == "":
+		if option_4 == "y" or option_4 == "Y" or option_4 == "":
 			listFiles(directory_chose_1)
 		else:
 			print(goodbye_msg)
@@ -233,7 +233,7 @@ if __name__ == '__main__':
 		directory_chose = sys.argv[2]
 		print(("Path Selection: "+directory_chose))
 		option_2 = input('Is the path correct? Y/n: ')
-		if option_2 == "y" or option_2 == "":
+		if option_2 == "y" or option_2 == "Y" or option_2 == "":
 			listFiles(directory_chose)
 		else:
 			print(goodbye_msg)
