@@ -14,6 +14,7 @@ import sys
 import time
 
 
+regexp1 = "(?i)(.*)(s[0-9][0-9])|(.*)([0-9999]{4})"
 s_letter = ""
 e_letter = ""
 title_name = ""
@@ -23,10 +24,10 @@ dest = ""
 source = ""
 goodbye_msg = "Goodbye..."
 load = 0
+movie_count = 0
 
-
-#{Release}{Minor}
-version = '1.2'
+#{Release}{Minor}{Updates}
+version = '1.2.1'
 date_released = 'Jan 27th 2018'
 
 
@@ -71,6 +72,8 @@ def listFiles(path):
 		i += 1
 
 	print("Processed "+str(f)+" files/folders")		
+	if movie_count >0 :
+		print("Found {} movies".format(movie_count))
 
 
 def isWin(title, s, f):
@@ -139,13 +142,19 @@ def match(test_str):
 
 	global title_name
 	global s_letter
+	global movie_count
 
 
-	m = re.match("(?i)(.*)(s[0-9][0-9])", test_str)
+	m = re.match(regexp1, test_str)
 
-	if m:
+	if m.group(1):
 		title_name = m.group(1) #Show Name
-		s_letter = m.group(2) 	#Season
+		s_letter = m.group(2)	#Season
+
+	elif m.group(3):
+		#print(m.group(3)) #Movie Name
+		#print(m.group(4)) #Movie Year
+		movie_count += 1
 
 	if not cleanTitle(title_name) == "":
 
