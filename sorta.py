@@ -27,7 +27,7 @@ load = 0
 movie_count = 0
 
 #{Release}{Minor}{Updates}
-version = '1.2.1'
+version = '1.2.2'
 date_released = 'Jan 27th 2018'
 
 
@@ -71,7 +71,7 @@ def listFiles(path):
 				f += 1
 		i += 1
 
-	print("Processed "+str(f)+" files/folders")		
+	print("Processed {} files/folders".format(f))		
 	if movie_count >0 :
 		print("Found {} movies".format(movie_count))
 
