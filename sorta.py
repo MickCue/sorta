@@ -1,5 +1,10 @@
 #!/usr/bin/python
+"""
+SorTA - Powerful Tv Show Sorter
+@MickCue
 
+2018
+"""
 
 import re
 import argparse
@@ -15,9 +20,8 @@ import time
 
 
 regexp1 = "(?i)(.*)(s[0-9][0-9])|(.*)([0-9999]{4})"
-s_letter = ""
-e_letter = ""
-title_name = ""
+season_str = ""
+show_name = ""
 directory_chose = ""
 directory_tree = ""
 dest = ""
@@ -27,7 +31,7 @@ load = 0
 movie_count = 0
 
 #{Release}{Minor}{Updates}
-version = '1.2.2'
+version = '1.2.3'
 date_released = 'Jan 27th 2018'
 
 
@@ -138,29 +142,29 @@ def removeLetter_S(t, s, e):
 	move(t.title().rstrip(), s, e)
 
 
-def match(test_str):
+def match(filename_str):
 
-	global title_name
-	global s_letter
+	global show_name
+	global season_str
 	global movie_count
 
 
-	m = re.match(regexp1, test_str)
+	m = re.match(regexp1, filename_str)
 
 	if m.group(1):
-		title_name = m.group(1) #Show Name
-		s_letter = m.group(2)	#Season
+		show_name = m.group(1) #Show Name
+		season_str = m.group(2)	#Season
 
 	elif m.group(3):
 		#print(m.group(3)) #Movie Name
 		#print(m.group(4)) #Movie Year
 		movie_count += 1
 
-	if not cleanTitle(title_name) == "":
+	if not cleanTitle(show_name) == "":
 
-		removeLetter_S(cleanTitle(title_name), s_letter, test_str)
-		title_name = ""
-		s_letter = ""
+		removeLetter_S(cleanTitle(show_name), season_str, filename_str)
+		show_name = ""
+		season_str = ""
 
 		
 def logo():
