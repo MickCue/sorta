@@ -7,7 +7,7 @@ file.s01e01 will be sorted as follows:
  - TV.name.s01e01 (Removed)
  - TV Name (Creates This Folder) 
  - Season 1 (Creates This sub-folder) 
- - File/Season 1/TV.name.s01e01 (File Dropped Here
+ - File/Season 1/TV.name.s01e01 (File Dropped Here)
 
 ___
 ### Installation
