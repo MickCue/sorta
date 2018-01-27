@@ -28,6 +28,7 @@ ___
 ### Version History
 
 **Current version:** v1.2  -  27th Jan 2017
+
 Changes: Cleaned up RegExp
 
 ___
