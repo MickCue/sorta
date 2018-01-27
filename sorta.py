@@ -14,7 +14,6 @@ import sys
 import time
 
 
-regex = r"(?i)(.+?(?=S[0-9])|(S[0-9][0-9])|s[0-9])"
 s_letter = ""
 e_letter = ""
 title_name = ""
@@ -23,13 +22,12 @@ directory_tree = ""
 dest = ""
 source = ""
 goodbye_msg = "Goodbye..."
-
 load = 0
 
 
-#{Release}{Minor}{Month}
-version = '1.1.9'
-date_released = 'Sept 10th 2017'
+#{Release}{Minor}
+version = '1.2'
+date_released = 'Jan 27th 2018'
 
 
 def getCurrentDirectory():
@@ -68,7 +66,7 @@ def listFiles(path):
 		if not extenstion_check.endswith('.py'):
 			r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  
 			if r1.search(onlyfiles[i]):			
-				match(regex,onlyfiles[i])
+				match(onlyfiles[i])
 				f += 1
 		i += 1
 
@@ -137,36 +135,23 @@ def removeLetter_S(t, s, e):
 	move(t.title().rstrip(), s, e)
 
 
-def match(regex, test_str):
-	
-	matches = re.finditer(regex, test_str)
+def match(test_str):
+
 	global title_name
 	global s_letter
 
 
-	for matchNum, match in enumerate(matches):
-		matchNum = matchNum + 1
+	m = re.match("(?i)(.*)(s[0-9][0-9])", test_str)
 
-		string_tv = ("{match}".format(match = match.group()))
-		
-
-		if re.match("s[0-9][1-9]|s[0-9]", string_tv):
-			s_letter = ("{match}".format(match = match.group()))
-		elif re.match("S[0-9][1-9]|S[0-9]", string_tv):
-			s_letter = ("{match}".format(match = match.group()))
-		elif re.match("E[0-9][1-9]|E[0-9]", string_tv):
-			e_letter = ("{match}".format(match = match.group()))
-		elif re.match("e[0-9][1-9]|e[0-9]", string_tv):
-			e_letter = ("{match}".format(match = match.group()))
-		else:
-			title_name = ("{match}".format(match = match.group()))
+	if m:
+		title_name = m.group(1) #Show Name
+		s_letter = m.group(2) 	#Season
 
 	if not cleanTitle(title_name) == "":
 
 		removeLetter_S(cleanTitle(title_name), s_letter, test_str)
 		title_name = ""
 		s_letter = ""
-
 
 		
 def logo():
@@ -210,12 +195,10 @@ def auto():
 		print(goodbye_msg)
 
 
-
 def checkPy():
     if sys.version_info[:2] <= (2, 9):
         print(goodbye_msg+" Python v3 is needed to run this script!")
         sys.exit()
-
 
 
 if __name__ == '__main__':
