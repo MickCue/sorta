@@ -31,8 +31,8 @@ load = 0
 movie_count = 0
 
 #{Release}{Minor}{Updates}
-version = '1.2.3'
-date_released = 'Jan 27th 2018'
+version = '1.2.4'
+date_released = 'March 19th 2018'
 
 
 def getCurrentDirectory():
@@ -57,6 +57,7 @@ def cleanTitle(name):
 
 
 def listFiles(path):
+	print("listFiles:"+path)
 	onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
 	i = 0
 	f = 0
@@ -70,7 +71,7 @@ def listFiles(path):
 		extenstion_check = onlyfiles[i]
 		if not extenstion_check.endswith('.py'):
 			r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  
-			if r1.search(onlyfiles[i]):			
+			if r1.search(onlyfiles[i]):		
 				match(onlyfiles[i])
 				f += 1
 		i += 1
@@ -87,6 +88,7 @@ def isWin(title, s, f):
 
 
 	if checkDirectoryName(title) == True:
+
 		if os.name == 'nt':
 			source = directory_chose+'\\'+f
 			directory_tree = directory_chose+'\\Season '+s
@@ -98,9 +100,7 @@ def isWin(title, s, f):
 			dest = directory_tree+"/"+f
 
 	elif checkDirectoryName(title) != True:
-		
 		if os.name == 'nt':
-		
 			source = directory_chose+'\\'+f
 			directory_tree = directory_chose+'\\'+title+'\\Season '+s
 			dest = directory_tree+"\\"+f
@@ -216,23 +216,27 @@ def checkPy():
 
 if __name__ == '__main__':
 	checkPy()
-	parameter = (sys.argv)
-	
-	if '-v' in parameter or '--version' in parameter:
-		print("Current version: v"+version)
-	elif '-h' in parameter or '--help' in parameter:
-		print("\nUSE: sorta.py -p PATH\n\n-logo Print Logo")
-	elif '-logo' in parameter:
-		logo()
-	elif '-p' in parameter or '--path' in parameter:
-		logo()
-		directory_chose = sys.argv[2]
-		print(("Path Selection: "+directory_chose))
+	parser = argparse.ArgumentParser(description='sorTA | Powerful TV Show Sorter')
+	parser.add_argument('-p', dest='p', help='Path to sort')
+	parser.add_argument('-logo', dest='l', help='Print Logo', action='store_true')
+	parser.add_argument('-v', dest='v', help='Show version details', action='store_true')
+
+	fetch_args = parser.parse_args()
+
+	if fetch_args.p:
+		print(("Path Selection: {}".format(fetch_args.p)))
 		option_2 = input('Is the path correct? Y/n: ')
 		if option_2 == "y" or option_2 == "Y" or option_2 == "":
-			listFiles(directory_chose)
+			directory_chose = fetch_args.p
+			listFiles(fetch_args.p)
 		else:
 			print(goodbye_msg)
 
+	elif fetch_args.l:
+		logo()
+
+	elif fetch_args.v:
+		print("Current version: v{}".format(version))
+
 	else:
-		auto()		
+		auto()
