@@ -19,7 +19,7 @@ import sys
 import time
 
 
-regexp1 = "(?i)(.*)(s[0-9][0-9])|(.*)([0-9999]{4})"
+regexp1 = "(?i)(.*)(s[0-9][0-9])|(.*)([0-9999]{4}|(.*))"
 season_str = ""
 show_name = ""
 directory_chose = ""
@@ -31,7 +31,7 @@ load = 0
 movie_count = 0
 
 #{Release}{Minor}{Updates}
-version = '1.2.4'
+version = '1.2.5'
 date_released = 'March 19th 2018'
 
 
@@ -57,7 +57,6 @@ def cleanTitle(name):
 
 
 def listFiles(path):
-	print("listFiles:"+path)
 	onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
 	i = 0
 	f = 0
@@ -150,6 +149,7 @@ def match(filename_str):
 
 
 	m = re.match(regexp1, filename_str)
+
 
 	if m.group(1):
 		show_name = m.group(1) #Show Name
