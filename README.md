@@ -25,13 +25,6 @@ user@host: sorta.py
 ```
 
 ___
-### Version History
-
-**Current version:** v1.2  -  27th Jan 2017
-
-Changes: Cleaned up RegExp
-
-___
 ### Future development
 Priority[1-3]
 - S01:Check for script updates [3]
