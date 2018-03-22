@@ -17,9 +17,10 @@ import sys, getopt
 import time
 import sys
 import time
+import configparser
 
 
-regexp1 = "(?i)(.*)(s[0-9][0-9])|(.*)([0-9999]{4}|(.*))"
+regexp1 = "(?i)(.*)(s[0-9][0-9])|(.*)([0-9999]{4})"
 season_str = ""
 show_name = ""
 directory_chose = ""
@@ -29,10 +30,35 @@ source = ""
 goodbye_msg = "Goodbye..."
 load = 0
 movie_count = 0
+path = "config.ini"
+savem = False
 
 #{Release}{Minor}{Updates}
-version = '1.2.5'
+version = '1.2.6'
 date_released = 'March 19th 2018'
+
+
+def createConfig():
+	config = configparser.ConfigParser()
+	config.add_section('Locations')
+	config.set('Locations', 'Movies', '')
+
+	with open(path, "w") as config_file:
+		config.write(config_file)
+
+def saveMovieLocation(location):
+	config = configparser.ConfigParser()
+	config.add_section('Locations')
+	config.set('Locations', 'Movies', location)
+
+	with open(path, "w") as config_file:
+		config.write(config_file)
+
+def getMovieLocation():
+	parser = configparser.ConfigParser()
+	parser.read('config.ini')
+	location = parser.get('Locations', 'Movies')
+	return location
 
 
 def getCurrentDirectory():
@@ -125,6 +151,11 @@ def move(title, s, f):
 			os.rename(source, dest)
 
 
+def moveMovies(source):
+	
+	shutil.move(source,getMovieLocation())
+
+
 def removeLetter_S(t, s, e):
 
 	if s.startswith("S0"):
@@ -150,21 +181,24 @@ def match(filename_str):
 
 	m = re.match(regexp1, filename_str)
 
+	if m is not None:
+		if m.group(1):
+			show_name = m.group(1) #Show Name
+			season_str = m.group(2)	#Season
 
-	if m.group(1):
-		show_name = m.group(1) #Show Name
-		season_str = m.group(2)	#Season
+		elif m.group(3) and m.group(4):
+			#print(m.group(3)) #Movie Name
+			#print(m.group(4)) #Movie Year
+			movie_count += 1
+			if savem == True:
+				moveMovies(filename_str)
 
-	elif m.group(3):
-		#print(m.group(3)) #Movie Name
-		#print(m.group(4)) #Movie Year
-		movie_count += 1
 
-	if not cleanTitle(show_name) == "":
+		if not cleanTitle(show_name) == "":
 
-		removeLetter_S(cleanTitle(show_name), season_str, filename_str)
-		show_name = ""
-		season_str = ""
+			removeLetter_S(cleanTitle(show_name), season_str, filename_str)
+			show_name = ""
+			season_str = ""
 
 		
 def logo():
@@ -185,10 +219,27 @@ def logo():
 def auto():
 	logo()
 	global directory_chose
+	global savem 
 	print("\nCurrent Directory: "+getCurrentDirectory())
 	option_3 = input("Sort current directory?  Y/n/q: ")
 	if option_3 == "y" or option_3 == "Y" or option_3 == "":
-		
+
+		if fetch_args.m:
+			if len(getMovieLocation())>0:
+				res1 = input('Do you want to save movies to\nLocation:{}\nY/n:'.format(getMovieLocation()))
+				if res1 == "y" or res1 == "Y" or res1 == "":
+					savem = True
+				elif res1 == "n":
+					savem = True
+					res3 = input('Enter New Location:')
+					saveMovieLocation(res3)
+			else:
+				res2 = input('Enter Location to save movies Y/n:')
+				if res2 == "y" or res2 == "Y" or res2 == "":
+					savem = True
+					res3 = input('Enter Location:')
+					saveMovieLocation(res3)
+
 		directory_chose = getCurrentDirectory()		
 		listFiles(getCurrentDirectory())
 	elif option_3 == "n":
@@ -216,10 +267,14 @@ def checkPy():
 
 if __name__ == '__main__':
 	checkPy()
+	if not os.path.exists(path):
+		createConfig()
+
 	parser = argparse.ArgumentParser(description='sorTA | Powerful TV Show Sorter')
 	parser.add_argument('-p', dest='p', help='Path to sort')
 	parser.add_argument('-logo', dest='l', help='Print Logo', action='store_true')
 	parser.add_argument('-v', dest='v', help='Show version details', action='store_true')
+	parser.add_argument('-m', dest='m', help='Move movies to this location', action='store_true')
 
 	fetch_args = parser.parse_args()
 
