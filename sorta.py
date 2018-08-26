@@ -20,7 +20,7 @@ import time
 import configparser
 
 
-regexp1 = "(?i)(.*)(s[0-9][0-9])|(.*)([0-9999]{4})"
+regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.*)([0-9999]{4})"
 season_str = ""
 show_name = ""
 directory_chose = ""
@@ -186,6 +186,7 @@ def match(filename_str):
 			show_name = m.group(1) #Show Name
 			season_str = m.group(2)	#Season
 
+
 		elif m.group(3) and m.group(4):
 			#print(m.group(3)) #Movie Name
 			#print(m.group(4)) #Movie Year
@@ -267,8 +268,8 @@ def checkPy():
 
 if __name__ == '__main__':
 	checkPy()
-	if not os.path.exists(path):
-		createConfig()
+	#if not os.path.exists(path):
+		#createConfig()
 
 	parser = argparse.ArgumentParser(description='sorTA | Powerful TV Show Sorter')
 	parser.add_argument('-p', dest='p', help='Path to sort')
