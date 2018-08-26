@@ -34,7 +34,7 @@ path = "config.ini"
 savem = False
 
 #{Release}{Minor}{Updates}
-version = '1.2.6'
+version = '1.2.7'
 date_released = 'March 19th 2018'
 
 
