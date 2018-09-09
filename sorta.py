@@ -20,7 +20,7 @@ import time
 #import configparser
 
 
-regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.*)([0-9999]{4})|(.+?)(\d{1,2})(x\d{1,2})"
+regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})"
 season_str = ""
 show_name = ""
 directory_chose = ""
@@ -34,7 +34,7 @@ path = "config.ini"
 savem = False
 
 #{Release}{Minor}{Updates}
-version = '1.2.8'
+version = '1.2.9'
 date_released = 'March 19th 2018'
 
 
@@ -187,12 +187,14 @@ def match(filename_str):
 			season_str = m.group(2)	#Season
 
 
-		elif m.group(3) and m.group(4):
+		elif m.group(6) and m.group(7):
 			#print(m.group(3)) #Movie Name
 			#print(m.group(4)) #Movie Year
-			movie_count += 1
-			if savem == True:
-				moveMovies(filename_str)
+			show_name = m.group(6) #Show Name
+			season_str = m.group(7)	#Season
+			#movie_count += 1
+			#if savem == True:
+			#	moveMovies(filename_str)
 
 		elif m.group(5) and m.group(6):
 			show_name = m.group(5) #Show Name
