@@ -17,10 +17,10 @@ import sys, getopt
 import time
 import sys
 import time
-import configparser
+#import configparser
 
 
-regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.*)([0-9999]{4})"
+regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.*)([0-9999]{4})|(.+?)(\d{1,2})(x\d{1,2})"
 season_str = ""
 show_name = ""
 directory_chose = ""
@@ -34,7 +34,7 @@ path = "config.ini"
 savem = False
 
 #{Release}{Minor}{Updates}
-version = '1.2.7'
+version = '1.2.8'
 date_released = 'March 19th 2018'
 
 
@@ -193,6 +193,12 @@ def match(filename_str):
 			movie_count += 1
 			if savem == True:
 				moveMovies(filename_str)
+
+		elif m.group(5) and m.group(6):
+			show_name = m.group(5) #Show Name
+			season_str = m.group(6)	#Season
+			if season_str.startswith("0"):
+				season_str = season_str[1:]
 
 
 		if not cleanTitle(show_name) == "":
