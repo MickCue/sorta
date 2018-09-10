@@ -2,12 +2,12 @@
 
 SorTA is a powerful TV Show file sorter that will match **Name.s01e01** and sort it into folders based on the Name and Season.
 
-file.s01e01 will be sorted as follows:
+xyz.s01e01.mp4 will be sorted as follows:
 
- - TV.name.s01e01 (Removed)
- - TV Name (Creates This Folder) 
- - Season 1 (Creates This sub-folder) 
- - File/Season 1/TV.name.s01e01 (File Dropped Here)
+ - xyz.s01e01.mp4 is cut
+ - xyz folder created
+ - Season 1 sub-folder created inside xyz
+ - File is pasted into xyz/Season 1/xyz.s01e01.mp4
 
 ___
 ### Installation
@@ -26,12 +26,13 @@ user@host: sorta.py
 
 ___
 ### Future development
-Priority[1-3]
-- S01:Check for script updates [3]
-- S02:Move files to another specified location [2]
-- S03:Check filesize and replace smaller file[Optional Command] [2]
-- S04:Sort folders with the file.s01e01 name/ Move to specified folder after implementing S02 [3]
-- S05:Append move date to filename [Optional Command] [2]
+- Clean Titles ( xyz.s01e02.ABC.[720p].mp4 -> xyz.s01e02.mp4 )
+- Move files to another specified location ( sorta.py -mp "/xyz" :All files moved here)
+- Check filesize and replace smaller file 
+- Append move date to filename ( Date File: xyz.s01e02 - Title[10-09-2018].mp4 )
+- Custom RegExp: Specify Name
+- Movie Support 
+- Config File
 
 ___
 ### Author
