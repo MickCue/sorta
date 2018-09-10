@@ -15,8 +15,8 @@ from os.path import isfile, join
 import os.path
 import sys, getopt
 import time
+import datetime
 import sys
-import time
 #import configparser
 
 
@@ -32,10 +32,16 @@ load = 0
 movie_count = 0
 path = "config.ini"
 savem = False
+extenstions = ["mp4", "avi", "mkv"]
 
 #{Release}{Minor}{Updates}
 version = '1.3.0'
 date_released = 'March 19th 2018'
+
+
+def dateStamp():
+	x = datetime.datetime.now()
+	return (x.strftime("%d-%m-%Y"))
 
 
 def createConfig():
@@ -95,7 +101,7 @@ def listFiles(path):
 
 		extenstion_check = onlyfiles[i]
 		if not extenstion_check.endswith('.py'):
-			r1 = re.compile("(\.mp4)|(\.avi)$|(\.mkv)$")  
+			r1 = re.compile('|'.join(extenstions))  
 			if r1.search(onlyfiles[i]):		
 				match(onlyfiles[i])
 				f += 1
@@ -196,9 +202,9 @@ def match(filename_str):
 			#if savem == True:
 			#	moveMovies(filename_str)
 
-		elif m.group(5) and m.group(6):
-			show_name = m.group(5) #Show Name
-			season_str = m.group(6)	#Season
+		elif m.group(3) and m.group(4):
+			show_name = m.group(3) #Show Name
+			season_str = m.group(4)	#Season
 			if season_str.startswith("0"):
 				season_str = season_str[1:]
 
@@ -285,6 +291,7 @@ if __name__ == '__main__':
 	parser.add_argument('-logo', dest='l', help='Print Logo', action='store_true')
 	parser.add_argument('-v', dest='v', help='Show version details', action='store_true')
 	parser.add_argument('-m', dest='m', help='Move movies to this location', action='store_true')
+	#parser.add_argument('-c', dest='m', help='Clean titles', action='store_true')
 
 	fetch_args = parser.parse_args()
 
