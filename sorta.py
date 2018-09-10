@@ -35,7 +35,7 @@ savem = False
 extenstions = ["mp4", "avi", "mkv"]
 
 #{Release}{Minor}{Updates}
-version = '1.3.0'
+version = '1.3.1'
 date_released = 'March 19th 2018'
 
 
