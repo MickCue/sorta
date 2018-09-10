@@ -32,7 +32,7 @@ load = 0
 movie_count = 0
 path = "config.ini"
 savem = False
-extenstions = ["mp4", "avi", "mkv"]
+extensions = ["mp4", "avi", "mkv"]
 
 #{Release}{Minor}{Updates}
 version = '1.3.1'
@@ -101,7 +101,7 @@ def listFiles(path):
 
 		extenstion_check = onlyfiles[i]
 		if not extenstion_check.endswith('.py'):
-			r1 = re.compile('|'.join(extenstions))  
+			r1 = re.compile('|'.join(extensions))  
 			if r1.search(onlyfiles[i]):		
 				match(onlyfiles[i])
 				f += 1
