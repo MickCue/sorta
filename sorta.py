@@ -20,7 +20,7 @@ import sys
 #import configparser
 
 
-regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})"
+regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})|(.*(?=.mp4|.mkv|.avi))"
 season_str = ""
 show_name = ""
 directory_chose = ""
@@ -33,9 +33,10 @@ movie_count = 0
 path = "config.ini"
 savem = False
 extensions = ["mp4", "avi", "mkv"]
+custom_show_flag = False
 
 #{Release}{Minor}{Updates}
-version = '1.3.1'
+version = '1.3.2'
 date_released = 'March 19th 2018'
 
 
@@ -75,6 +76,7 @@ def getCurrentDirectory():
 def checkDirectoryName(title):
 
 	directory_name = os.path.basename(directory_chose)
+	#print("directory_name:{}\ntitle:{}".format(directory_name, title))
 	
 	if directory_name == title:		
 		return True
@@ -116,6 +118,7 @@ def isWin(title, s, f):
 	global dest
 	global directory_tree
 	global source
+	global custom_show_flag
 
 
 	if checkDirectoryName(title) == True:
@@ -124,6 +127,7 @@ def isWin(title, s, f):
 			source = directory_chose+'\\'+f
 			directory_tree = directory_chose+'\\Season '+s
 			dest = directory_tree+"\\"+f
+
 		else:
 	
 			source = directory_chose+'/'+f
@@ -133,28 +137,49 @@ def isWin(title, s, f):
 	elif checkDirectoryName(title) != True:
 		if os.name == 'nt':
 			source = directory_chose+'\\'+f
-			directory_tree = directory_chose+'\\'+title+'\\Season '+s
+			if s == "":
+				directory_tree = directory_chose+'\\'+title
+			else:
+				directory_tree = directory_chose+'\\'+title+'\\Season '+s
 			dest = directory_tree+"\\"+f
+			if fetch_args.s and custom_show_flag == True:
+				source = directory_chose+'\\'+f
+				directory_tree = directory_chose+'\\'+fetch_args.s
+				dest = directory_tree+"\\"+f
+				custom_show_flag = False
 	
 		else:
 	
 			source = directory_chose+'/'+f
-			directory_tree = directory_chose+'/'+title+'/Season '+s
+			if s == "":
+				directory_tree = directory_chose+'/'+title
+			else:
+				directory_tree = directory_chose+'/'+title+'/Season '+s
 			dest = directory_tree+"/"+f
+			if fetch_args.s and custom_show_flag == True:
+				source = directory_chose+'/'+f
+				directory_tree = directory_chose+'/'+fetch_args.s
+				dest = directory_tree+"/"+f
+				custom_show_flag = False
 
 
 def move(title, s, f):
 
 	isWin(title, s, f)	
-	if not os.path.exists(directory_tree):
-		
+
+	if os.path.exists(dest):
+			print("File {} already exists inside folder /{}".format(f, title))
+
+	elif not os.path.exists(directory_tree):
 		os.makedirs(directory_tree)			
 		shutil.move(source,dest)
-
-	if os.path.exists(directory_tree):
+	
+	elif os.path.exists(directory_tree):
 		
 		if not os.path.exists(dest):
 			os.rename(source, dest)
+
+	
 
 
 def moveMovies(source):
@@ -175,7 +200,10 @@ def removeLetter_S(t, s, e):
 	elif s.startswith("s"):
 		s = s.replace("s", "")
 
-	move(t.title().rstrip(), s, e)
+	if fetch_args.s:
+		move(t.rstrip(), s, e)
+	else:
+		move(t.title().rstrip(), s, e)
 
 
 def match(filename_str):
@@ -208,6 +236,12 @@ def match(filename_str):
 			if season_str.startswith("0"):
 				season_str = season_str[1:]
 
+		elif m.group(8):
+			if fetch_args.s:
+				if re.search(fetch_args.s, m.group(8), re.IGNORECASE):
+					show_name = fetch_args.s
+					season_str = ""
+
 
 		if not cleanTitle(show_name) == "":
 
@@ -228,7 +262,7 @@ def logo():
 			                                   
 *************************************""")
 	print(date_released)
-	print("\nUSE: sorta.py -p PATH")
+	print("\nUSE:\nsorta.py -p \"/home/desktop\" <- Specfiy Path\nsorta.py -s SHOW <- Custom Show if sorTA fails to sort")
 	print("*************************************")
 
 
@@ -291,7 +325,7 @@ if __name__ == '__main__':
 	parser.add_argument('-logo', dest='l', help='Print Logo', action='store_true')
 	parser.add_argument('-v', dest='v', help='Show version details', action='store_true')
 	parser.add_argument('-m', dest='m', help='Move movies to this location', action='store_true')
-	#parser.add_argument('-c', dest='m', help='Clean titles', action='store_true')
+	parser.add_argument('-s', dest='s', help='Custom Show')
 
 	fetch_args = parser.parse_args()
 
@@ -306,6 +340,9 @@ if __name__ == '__main__':
 
 	elif fetch_args.l:
 		logo()
+
+	# elif fetch_args.s:
+	# 	print("Custom Show:{}".format(fetch_args.s))
 
 	elif fetch_args.v:
 		print("Current version: v{}".format(version))
