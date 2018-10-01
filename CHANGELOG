@@ -1,0 +1,24 @@
+**sorTA CHANGELOG**
+____________________
+# Version: 1.2.3
+# Date: October 1st, 2018
+
+
+#  Updates
+-- Custom Show -s | sorta.py -s "Show1:Show2" | sorta.py -s Show1
+-- Change Release Date format, version x.x releases only
+-- Changed how sorTA knows if it's in a specfic directory, moved from boolean to txt
+-- Added feature to move epiosdes into directory called episodes, used to track unwatched | sorta -qe (will move files into episode directory)
+-- Added CHANGELOG for issue tracking
+-- Wiki Documention, will complete fully for 1.3
+-- Config foundation: unix path added for config location and new para argument for testing. 
+-- Removed old Config functions
+-- Changed checkDirectoryName to use RegExp for one condition
+-- Removed boolean for checkDirectoryName, string based
+-- Cleand Show title, issues with spaces fixed with regexp
+
+#  ToDo Next
+1. Adding Config JSON on next build, for saving Shows 
+2. BBC.Show --> Bbc Show Folder | Fix to Upper
+____________________
+# Version: 1.2.2

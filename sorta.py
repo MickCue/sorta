@@ -17,7 +17,6 @@ import sys, getopt
 import time
 import datetime
 import sys
-#import configparser
 
 
 regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})|(.*(?=.mp4|.mkv|.avi))"
@@ -30,14 +29,15 @@ source = ""
 goodbye_msg = "Goodbye..."
 load = 0
 movie_count = 0
-path = "config.ini"
+path_unix = ".sorta/"
 savem = False
 extensions = ["mp4", "avi", "mkv"]
 custom_show_flag = False
 
+
 #{Release}{Minor}{Updates}
-version = '1.3.2'
-date_released = 'March 19th 2018'
+version = '1.3.3'
+date_released = 'v1.3 Released: March 19th 2018'
 
 
 def dateStamp():
@@ -46,26 +46,14 @@ def dateStamp():
 
 
 def createConfig():
-	config = configparser.ConfigParser()
-	config.add_section('Locations')
-	config.set('Locations', 'Movies', '')
-
-	with open(path, "w") as config_file:
-		config.write(config_file)
-
-def saveMovieLocation(location):
-	config = configparser.ConfigParser()
-	config.add_section('Locations')
-	config.set('Locations', 'Movies', location)
-
-	with open(path, "w") as config_file:
-		config.write(config_file)
-
-def getMovieLocation():
-	parser = configparser.ConfigParser()
-	parser.read('config.ini')
-	location = parser.get('Locations', 'Movies')
-	return location
+	if os.path.exists(path_unix):
+		print("Config Found")
+		readConfig()
+	else:
+		print("Creating Config File")
+		os.makedirs(path_unix)	
+		config = os.path.join(path_unix, 'config')
+		f = open(config, "a")
 
 
 def getCurrentDirectory():
@@ -76,12 +64,23 @@ def getCurrentDirectory():
 def checkDirectoryName(title):
 
 	directory_name = os.path.basename(directory_chose)
+	title = re.sub('[^a-zA-Z\d\s:]', '', title)
 	#print("directory_name:{}\ntitle:{}".format(directory_name, title))
-	
-	if directory_name == title:		
-		return True
-	else:		
-		return False
+
+	title = title.strip()
+	directory_name = directory_name.strip()
+
+	if re.search(title, directory_name, re.IGNORECASE):
+		#print("In Show Folder")	
+		return "Show"
+
+	elif directory_name.startswith("Season"):
+		#print("In Show Folder")	
+		return "Season"
+
+	else:
+		#print("New Show")	
+		return "New"
 
 
 def cleanTitle(name):
@@ -121,40 +120,91 @@ def isWin(title, s, f):
 	global custom_show_flag
 
 
-	if checkDirectoryName(title) == True:
+	if checkDirectoryName(title) == "Show":
 
 		if os.name == 'nt':
-			source = directory_chose+'\\'+f
-			directory_tree = directory_chose+'\\Season '+s
-			dest = directory_tree+"\\"+f
+			if fetch_args.qe: #If qe, move files into season/episode folder
+				source = directory_chose+'\\'+f
+				directory_tree = directory_chose+'\\Season '+s+'\\Episodes'
+				dest = directory_tree+"\\"+f
+
+			else:
+				source = directory_chose+'\\'+f
+				directory_tree = directory_chose+'\\Season '+s
+				dest = directory_tree+"\\"+f
 
 		else:
-	
-			source = directory_chose+'/'+f
-			directory_tree = directory_chose+'/Season '+s
-			dest = directory_tree+"/"+f
+			if fetch_args.qe:
+				source = directory_chose+'/'+f
+				directory_tree = directory_chose+'/Season '+s+'/Episodes'
+				dest = directory_tree+"/"+f
+			else:
+				source = directory_chose+'/'+f
+				directory_tree = directory_chose+'/Season '+s
+				dest = directory_tree+"/"+f
 
-	elif checkDirectoryName(title) != True:
+
+	elif checkDirectoryName(title) == "Season":
+
+
+		if os.name == 'nt':
+			if fetch_args.qe: #If qe, move files into season/episode folder
+				source = directory_chose+'\\'+f
+				directory_tree = directory_chose+'\\Episodes'
+				dest = directory_tree+"\\"+f
+
+			else:
+				source = directory_chose+'\\'+f
+				directory_tree = directory_chose
+				dest = directory_tree+"\\"+f
+
+		else:
+			if fetch_args.qe:
+				source = directory_chose+'/'+f
+				directory_tree = directory_chose+'/Episodes'
+				dest = directory_tree+"/"+f
+			else:
+				source = directory_chose+'/'+f
+				directory_tree = directory_chose
+				dest = directory_tree+"/"+f
+
+	elif checkDirectoryName(title) == "New":
+		#Clean Up titles
+		title = re.sub(r'[^\w]', ' ', title) 
+		#title = title.lstrip()
+
+		# if fetch_args.s:
+		# 	title = fetch_args.s
+
 		if os.name == 'nt':
 			source = directory_chose+'\\'+f
 			if s == "":
 				directory_tree = directory_chose+'\\'+title
-			else:
-				directory_tree = directory_chose+'\\'+title+'\\Season '+s
-			dest = directory_tree+"\\"+f
-			if fetch_args.s and custom_show_flag == True:
+
+			elif fetch_args.qe: #If qe, move files into season/episode folder
+				directory_tree = directory_chose+'\\'+title+'\\Season '+s+'\\Episodes'
+
+			elif fetch_args.s and custom_show_flag == True:
 				source = directory_chose+'\\'+f
 				directory_tree = directory_chose+'\\'+fetch_args.s
 				dest = directory_tree+"\\"+f
 				custom_show_flag = False
+
+			else:
+				directory_tree = directory_chose+'\\'+title+'\\Season '+s
+				dest = directory_tree+"\\"+f
+			
 	
 		else:
 	
 			source = directory_chose+'/'+f
 			if s == "":
 				directory_tree = directory_chose+'/'+title
+			elif fetch_args.qe: #If qe, move files into season/episode folder
+				directory_tree = directory_chose+'/'+title+'/Season '+s+'/Episodes'
 			else:
 				directory_tree = directory_chose+'/'+title+'/Season '+s
+			
 			dest = directory_tree+"/"+f
 			if fetch_args.s and custom_show_flag == True:
 				source = directory_chose+'/'+f
@@ -178,8 +228,6 @@ def move(title, s, f):
 		
 		if not os.path.exists(dest):
 			os.rename(source, dest)
-
-	
 
 
 def moveMovies(source):
@@ -215,6 +263,7 @@ def match(filename_str):
 
 	m = re.match(regexp1, filename_str)
 
+
 	if m is not None:
 		if m.group(1):
 			show_name = m.group(1) #Show Name
@@ -238,9 +287,26 @@ def match(filename_str):
 
 		elif m.group(8):
 			if fetch_args.s:
-				if re.search(fetch_args.s, m.group(8), re.IGNORECASE):
-					show_name = fetch_args.s
-					season_str = ""
+				custom_show = fetch_args.s
+				
+				if ":" in fetch_args.s:
+					custom_show = custom_show.split(":")
+					for i in range(len(custom_show)):
+						custom_show_tmp = custom_show[i]
+						custom_show_tmp = custom_show_tmp.replace(" ", ".*") # FIXED REGEXP, WHEN INPUT HAS SPACE BUT FILENAME HAS .
+						if re.search(custom_show_tmp, m.group(8), re.IGNORECASE):
+							print("Found Show:"+custom_show[i])
+							show_name = custom_show[i]
+							season_str = ""
+				else:
+					print(m.group(8))
+					custom_show_tmp = custom_show
+					custom_show_tmp = custom_show_tmp.replace(" ", ".*") # FIXED REGEXP, WHEN INPUT HAS SPACE BUT FILENAME HAS .
+					if re.search(custom_show_tmp, m.group(8), re.IGNORECASE):
+						print("Found Show:"+custom_show)
+						show_name = custom_show
+						season_str = ""
+
 
 
 		if not cleanTitle(show_name) == "":
@@ -326,6 +392,8 @@ if __name__ == '__main__':
 	parser.add_argument('-v', dest='v', help='Show version details', action='store_true')
 	parser.add_argument('-m', dest='m', help='Move movies to this location', action='store_true')
 	parser.add_argument('-s', dest='s', help='Custom Show')
+	parser.add_argument('-qe', dest='qe', help='Queue Episodes', action='store_true')
+	parser.add_argument('-config', dest='co', help='Config Check', action='store_true')
 
 	fetch_args = parser.parse_args()
 
@@ -346,6 +414,9 @@ if __name__ == '__main__':
 
 	elif fetch_args.v:
 		print("Current version: v{}".format(version))
+
+	elif fetch_args.co:
+		createConfig()
 
 	else:
 		auto()
