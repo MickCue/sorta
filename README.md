@@ -33,7 +33,7 @@ user@host: sorta.py -qe
 ```
 
 ___
-### Future development
+### Future Development
 - Clean Titles ( xyz.s01e02.ABC.[720p].mp4 -> xyz.s01e02.mp4 )
 - Move files to another specified location ( sorta.py -mp "/xyz" :All files moved here)
 - Check filesize and replace smaller file 

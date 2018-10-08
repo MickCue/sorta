@@ -19,7 +19,6 @@ import datetime
 import sys
 
 
-regexp1 = "(?i)(.*)(s[0-9][0-9]|s[0-9])|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})|(.*(?=.mp4|.mkv|.avi))"
 season_str = ""
 show_name = ""
 directory_chose = ""
@@ -29,14 +28,20 @@ source = ""
 goodbye_msg = "Goodbye..."
 load = 0
 movie_count = 0
+qe_show_count = 0
 path_unix = ".sorta/"
 savem = False
-extensions = ["mp4", "avi", "mkv"]
+#extensions = ["mp4", "avi", "mkv"]
+extensions_regexp1 = ".mp4|.mkv|.avi"
+main_matcher = "((?i)s\d{1,2})(?i)e\d{1,2}|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})"
+#regexp1 = "(?i)(.*)"+main_matcher+"|(.*(?="+extensions_regexp1+"))"
 custom_show_flag = False
 
+#Patched Depricated Warning
+regexp1 = re.compile("(?i)(.*)"+main_matcher+"|(.*(?="+extensions_regexp1+"))")
 
 #{Release}{Minor}{Updates}
-version = '1.3.3'
+version = '1.3.4'
 date_released = 'v1.3 Released: March 19th 2018'
 
 
@@ -102,7 +107,9 @@ def listFiles(path):
 
 		extenstion_check = onlyfiles[i]
 		if not extenstion_check.endswith('.py'):
-			r1 = re.compile('|'.join(extensions))  
+			extensions_regexp1_tmp = extensions_regexp1.replace(".", "")
+			#r1 = re.compile('|'.join(extensions))
+			r1 = re.compile(extensions_regexp1_tmp)
 			if r1.search(onlyfiles[i]):		
 				match(onlyfiles[i])
 				f += 1
@@ -110,7 +117,11 @@ def listFiles(path):
 
 	print("Processed {} files/folders".format(f))		
 	if movie_count >0 :
-		print("Found {} movies".format(movie_count))
+		print("Success: Found {} movies".format(movie_count))
+
+	if qe_show_count > 0:
+		print("Success: Queued {} episodes".format(qe_show_count))
+
 
 
 def isWin(title, s, f):
@@ -118,12 +129,14 @@ def isWin(title, s, f):
 	global directory_tree
 	global source
 	global custom_show_flag
+	global qe_show_count 
 
 
 	if checkDirectoryName(title) == "Show":
 
 		if os.name == 'nt':
 			if fetch_args.qe: #If qe, move files into season/episode folder
+				qe_show_count += 1
 				source = directory_chose+'\\'+f
 				directory_tree = directory_chose+'\\Season '+s+'\\Episodes'
 				dest = directory_tree+"\\"+f
@@ -135,6 +148,7 @@ def isWin(title, s, f):
 
 		else:
 			if fetch_args.qe:
+				qe_show_count += 1
 				source = directory_chose+'/'+f
 				directory_tree = directory_chose+'/Season '+s+'/Episodes'
 				dest = directory_tree+"/"+f
@@ -149,6 +163,7 @@ def isWin(title, s, f):
 
 		if os.name == 'nt':
 			if fetch_args.qe: #If qe, move files into season/episode folder
+				qe_show_count += 1
 				source = directory_chose+'\\'+f
 				directory_tree = directory_chose+'\\Episodes'
 				dest = directory_tree+"\\"+f
@@ -160,6 +175,7 @@ def isWin(title, s, f):
 
 		else:
 			if fetch_args.qe:
+				qe_show_count += 1
 				source = directory_chose+'/'+f
 				directory_tree = directory_chose+'/Episodes'
 				dest = directory_tree+"/"+f
@@ -171,17 +187,15 @@ def isWin(title, s, f):
 	elif checkDirectoryName(title) == "New":
 		#Clean Up titles
 		title = re.sub(r'[^\w]', ' ', title) 
-		#title = title.lstrip()
-
-		# if fetch_args.s:
-		# 	title = fetch_args.s
 
 		if os.name == 'nt':
 			source = directory_chose+'\\'+f
 			if s == "":
 				directory_tree = directory_chose+'\\'+title
 
-			elif fetch_args.qe: #If qe, move files into season/episode folder
+			#If qe, move files into season/episode folder
+			elif fetch_args.qe: 
+				qe_show_count += 1
 				directory_tree = directory_chose+'\\'+title+'\\Season '+s+'\\Episodes'
 
 			elif fetch_args.s and custom_show_flag == True:
@@ -200,7 +214,9 @@ def isWin(title, s, f):
 			source = directory_chose+'/'+f
 			if s == "":
 				directory_tree = directory_chose+'/'+title
-			elif fetch_args.qe: #If qe, move files into season/episode folder
+			#If qe, move files into season/episode folder
+			elif fetch_args.qe: 
+				qe_show_count += 1
 				directory_tree = directory_chose+'/'+title+'/Season '+s+'/Episodes'
 			else:
 				directory_tree = directory_chose+'/'+title+'/Season '+s
@@ -261,6 +277,7 @@ def match(filename_str):
 	global movie_count
 
 
+
 	m = re.match(regexp1, filename_str)
 
 
@@ -308,9 +325,7 @@ def match(filename_str):
 						season_str = ""
 
 
-
 		if not cleanTitle(show_name) == "":
-
 			removeLetter_S(cleanTitle(show_name), season_str, filename_str)
 			show_name = ""
 			season_str = ""
@@ -337,7 +352,12 @@ def auto():
 	global directory_chose
 	global savem 
 	print("\nCurrent Directory: "+getCurrentDirectory())
+
+	if fetch_args.qe:
+		print("Selected -qe: The files will be queued into directory *Episodes*")
+
 	option_3 = input("Sort current directory?  Y/n/q: ")
+
 	if option_3 == "y" or option_3 == "Y" or option_3 == "":
 
 		if fetch_args.m:
