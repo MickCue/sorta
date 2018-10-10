@@ -33,15 +33,15 @@ path_unix = ".sorta/"
 savem = False
 #extensions = ["mp4", "avi", "mkv"]
 extensions_regexp1 = ".mp4|.mkv|.avi"
-main_matcher = "((?i)s\d{1,2})(?i)e\d{1,2}|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})"
-#regexp1 = "(?i)(.*)"+main_matcher+"|(.*(?="+extensions_regexp1+"))"
+#main_matcher = "((?i)s\d{1,2})(?i)e\d{1,2}|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})"
+regexp1 = "(?i)(.*)((?i)s\d{1,2})(?i)e\d{1,2}|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})|(.*(?="+extensions_regexp1+"))"
 custom_show_flag = False
 
 #Patched Depricated Warning
-regexp1 = re.compile("(?i)(.*)"+main_matcher+"|(.*(?="+extensions_regexp1+"))")
+#regexp1 = re.compile("(?i)(.*)"+main_matcher+"|(.*(?="+extensions_regexp1+"))")
 
 #{Release}{Minor}{Updates}
-version = '1.3.4'
+version = '1.3.4.1'
 date_released = 'v1.3 Released: March 19th 2018'
 
 

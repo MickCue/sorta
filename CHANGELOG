@@ -1,5 +1,21 @@
 **sorTA CHANGELOG**
 ____________________
+# Version: 1.2.4.1
+# Date: October 10th, 2018
+
+
+#   Updates
++	FLAG message still there, reverted back to old regexp
+
+#   Backlog ToDo
++ 	Use Lists instead of Strings for: extensions_regexp1
++ 	Adding Config JSON on next build, for saving Shows 
++ 	BBC.Show --> Bbc Show Folder | Fix to Upper
++ 	When moving files into episode folder while inside season folder, ignore Show name folder
++ 	When moving shorten names add parameter to specify correct Show e.g mitm.s01e01 should go into folder 'Movie In The Moon'
+	sorta.py -ss "mitm:Movie In The Moon"
++ 	Clean titles, easy to implement, check f and remove junk between S01E05(.*).mp4
+________________________________________
 # Version: 1.2.4
 # Date: October 8th, 2018
 
