@@ -40,8 +40,8 @@ custom_show_flag = False
 #Patched Depricated Warning
 regexp1 = re.compile("(?i)(.*)"+main_matcher+"|(.*(?="+extensions_regexp1+"))")
 
-#{Release}{Minor}{Updates}
-version = '1.3.5.TESTING'
+#{Release}{Minor}{Updates}{Patches}
+version = '1.3.4.2'
 date_released = 'v1.3 Released: March 19th 2018'
 
 
