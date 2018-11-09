@@ -17,7 +17,7 @@ import sys, getopt
 import time
 import datetime
 import sys
-
+import json
 
 season_str = ""
 show_name = ""
@@ -29,20 +29,15 @@ goodbye_msg = "Goodbye..."
 load = 0
 movie_count = 0
 qe_show_count = 0
-path_unix = ".sorta/"
 savem = False
-#extensions = ["mp4", "avi", "mkv"]
 extensions_regexp1 = ".mp4|.mkv|.avi"
-main_matcher = "((?i)s\d{1,2})(?i)e\d{1,2}|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})"
-#regexp1 = "(?i)(.*)((?i)s\d{1,2})(?i)e\d{1,2}|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})|(.*(?="+extensions_regexp1+"))"
+regexp1 = "(?i)(.*)((?i)s\d{1,2})(?i)e\d{1,2}|(.+?)(\d{1,2})(x\d{1,2})|(.*)(\d{4}.\d{2}.\d{2})|(.*(?="+extensions_regexp1+"))"
 custom_show_flag = False
 
-#Patched Depricated Warning
-regexp1 = re.compile("(?i)(.*)"+main_matcher+"|(.*(?="+extensions_regexp1+"))")
 
-#{Release}{Minor}{Updates}{Patches}
-version = '1.3.4.2'
-date_released = 'v1.3 Released: March 19th 2018'
+#{Release}{Minor}{Patches}
+version = '1.4'
+date_released = 'v1.4 Released: November 9th 2018'
 
 
 def dateStamp():
@@ -50,15 +45,69 @@ def dateStamp():
 	return (x.strftime("%d-%m-%Y"))
 
 
-def createConfig():
-	if os.path.exists(path_unix):
-		print("Config Found")
-		readConfig()
+def createCuShJSON():
+	ds = os.path.dirname(__file__) # Directory of sorTA
+	placeholder = {"sorTA": { "Name" : "Config File"}}
+
+
+	if os.path.exists(ds+"/showList.json"):
+		print("Custom Show List Succesfully Loaded")
+
 	else:
-		print("Creating Config File")
-		os.makedirs(path_unix)	
-		config = os.path.join(path_unix, 'config')
+		print("Creating Custom Show List File")
+		
+		sortaPath = r'{}'.format(ds) # path to be created
+
+		config = os.path.join(sortaPath, 'showList.json')
 		f = open(config, "a")
+
+		with open(ds+"/showList.json" , 'w') as f:
+			json.dump(placeholder, f)
+
+
+def getShowList():
+	ds = os.path.dirname(__file__) # Directory of sorTA
+	
+	with open(ds+"/showList.json") as jsonData:
+		d = json.load(jsonData)
+
+		for x in d:
+			print(x) # Show
+			print("+"+d[x]["Name"])
+
+
+def checkShowInList(show):
+	ds = os.path.dirname(__file__) # Directory of sorTA
+
+	with open(ds+"/showList.json") as jsonData:
+		d = json.load(jsonData)
+		for x in d:
+			#print(show.lower() + "=" + x.lower())
+			if show.lower() == x.lower():
+				print("Found Custom Show ({}) for: {}".format(d[x]["Name"], x))
+				show = d[x]["Name"]
+
+			elif show.lower().startswith(x.lower()): # Unmatched Media files but specified in Show JSON
+				print("Found Custom Show ({}) for: {}".format(d[x]["Name"], x))
+				show = d[x]["Name"]
+
+		return show
+
+
+def addCustomShow(data):
+	# Format Match:Replace
+	csData = data.split(':')
+	ds = os.path.dirname(__file__) # Directory of sorTA
+
+	entry = {csData[0]: { "Name" : csData[1]}}
+
+	with open(ds+"/showList.json") as f:
+		data = json.load(f)
+		data.update(entry)
+
+	with open(ds+"/showList.json" , 'w') as f:
+		json.dump(data, f)
+		print("Succesfully added {}({})".format(csData[0],csData[1]))
 
 
 def getCurrentDirectory():
@@ -113,6 +162,8 @@ def listFiles(path):
 			if r1.search(onlyfiles[i]):		
 				match(onlyfiles[i])
 				f += 1
+				if fetch_args.v1:
+					print('\033[92m' + "++v1 Messages:onlyfiles[i]:List Files:" + '\033[0m' + onlyfiles[i])
 		i += 1
 
 	print("Processed {} files/folders".format(f))		
@@ -131,6 +182,9 @@ def isWin(title, s, f):
 	global custom_show_flag
 	global qe_show_count 
 
+	title = checkShowInList(title)
+
+	
 
 	if checkDirectoryName(title) == "Show":
 
@@ -302,30 +356,37 @@ def match(filename_str):
 			if season_str.startswith("0"):
 				season_str = season_str[1:]
 
-		elif m.group(8):
-			if fetch_args.s:
-				custom_show = fetch_args.s
-				
-				if ":" in fetch_args.s:
-					custom_show = custom_show.split(":")
-					for i in range(len(custom_show)):
-						custom_show_tmp = custom_show[i]
+
+		elif m.group(8):		
+			if m.group(8) != checkShowInList(m.group(8)):
+				show_name = checkShowInList(m.group(8)) # Check if unmatched is in show list json
+				#print("The group {} and the return {}".format(m.group(8), show_name))
+
+			else:
+				if fetch_args.s:
+					custom_show = fetch_args.s
+					
+					if ":" in fetch_args.s:
+						custom_show = custom_show.split(":")
+						for i in range(len(custom_show)):
+							custom_show_tmp = custom_show[i]
+							custom_show_tmp = custom_show_tmp.replace(" ", ".*") # FIXED REGEXP, WHEN INPUT HAS SPACE BUT FILENAME HAS .
+							if re.search(custom_show_tmp, m.group(8), re.IGNORECASE):
+								print("Found Show:"+custom_show[i])
+								show_name = custom_show[i]
+								season_str = ""
+					else:
+						#print(m.group(8))
+						custom_show_tmp = custom_show
 						custom_show_tmp = custom_show_tmp.replace(" ", ".*") # FIXED REGEXP, WHEN INPUT HAS SPACE BUT FILENAME HAS .
 						if re.search(custom_show_tmp, m.group(8), re.IGNORECASE):
-							print("Found Show:"+custom_show[i])
-							show_name = custom_show[i]
+							print("Found Show:"+custom_show)
+							show_name = custom_show
 							season_str = ""
-				else:
-					print(m.group(8))
-					custom_show_tmp = custom_show
-					custom_show_tmp = custom_show_tmp.replace(" ", ".*") # FIXED REGEXP, WHEN INPUT HAS SPACE BUT FILENAME HAS .
-					if re.search(custom_show_tmp, m.group(8), re.IGNORECASE):
-						print("Found Show:"+custom_show)
-						show_name = custom_show
-						season_str = ""
 
-
+		
 		if not cleanTitle(show_name) == "":
+
 			removeLetter_S(cleanTitle(show_name), season_str, filename_str)
 			show_name = ""
 			season_str = ""
@@ -333,22 +394,27 @@ def match(filename_str):
 		
 def logo():
 	print("""
-   _____  ___   ____  ______   ____ 
-  / ___/ /   \ |    \|      | /    |
- (   \_ |     ||  D  )      ||  o  |
-  \__  ||  O  ||    /|_|  |_||     |
-  /  \ ||     ||    \  |  |  |  _  |
-  \    ||     ||  .  \ |  |  |  |  |
-   \___| \___/ |__|\_| |__|  |__|__|v"""+version+"""
+  ______                    """+'\033[94m'+"""________   ______"""+'\033[0m'+"""
+ /      \                  """+'\033[94m'+"""|        \ /      \\"""+'\033[0m'+""" 
+|  $$$$$$\  ______    ______"""+'\033[94m'+"""\$$$$$$$$|  $$$$$$\\"""+'\033[0m'+"""
+| $$___\$$ /      \  /      \ """+'\033[94m'+"""| $$   | $$__| $$"""+'\033[0m'+"""
+ \$$    \ |  $$$$$$\|  $$$$$$\\"""+'\033[94m'+"""| $$   | $$    $$"""+'\033[0m'+"""
+ _\$$$$$$\| $$  | $$| $$   \$$"""+'\033[94m'+"""| $$   | $$$$$$$$"""+'\033[0m'+"""
+|  \__| $$| $$__/ $$| $$      """+'\033[94m'+"""| $$   | $$  | $$"""+'\033[0m'+"""
+ \$$    $$ \$$    $$| $$      """+'\033[94m'+"""| $$   | $$  | $$"""+'\033[0m'+""" v"""+version+"""
+  \$$$$$$   \$$$$$$  \$$       """+'\033[94m'+"""\$$    \$$   \$$"""+'\033[0m'+"""  
 			                                   
 *************************************""")
 	print(date_released)
-	print("\nUSE:\nsorta.py -p \"/home/desktop\" <- Specfiy Path\nsorta.py -s SHOW <- Custom Show if sorTA fails to sort")
+	print("\nUSE:\nsorta.py -p \"/home/desktop\" <- Specfiy Path \
+		\nsorta.py -s SHOW <- Custom Show if sorTA fails to sort \
+		\nsorta.py --addshow SHOW <- Add custom show (filename xyz.mp4 sorted into added SHOW)")
 	print("*************************************")
 
 
 def auto():
 	logo()
+	createCuShJSON()
 	global directory_chose
 	global savem 
 	print("\nCurrent Directory: "+getCurrentDirectory())
@@ -408,12 +474,14 @@ if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser(description='sorTA | Powerful TV Show Sorter')
 	parser.add_argument('-p', dest='p', help='Path to sort')
-	parser.add_argument('-logo', dest='l', help='Print Logo', action='store_true')
+	parser.add_argument('--logo', dest='l', help='Print Logo', action='store_true')
 	parser.add_argument('-v', dest='v', help='Show version details', action='store_true')
 	parser.add_argument('-m', dest='m', help='Move movies to this location', action='store_true')
-	parser.add_argument('-s', dest='s', help='Custom Show')
-	parser.add_argument('-qe', dest='qe', help='Queue Episodes', action='store_true')
-	parser.add_argument('-config', dest='co', help='Config Check', action='store_true')
+	parser.add_argument('-s', dest='s', help='Specify unmatched shows')
+	parser.add_argument('--addshow', dest='addshow', help='Custom Show')
+	parser.add_argument('--showlist', dest='csl', help='Custom Show List', action='store_true')
+	parser.add_argument('--qe', dest='qe', help='Queue Episodes', action='store_true')
+	parser.add_argument('--v1', dest='v1', help='Display more info to console', action='store_true')
 
 	fetch_args = parser.parse_args()
 
@@ -435,8 +503,11 @@ if __name__ == '__main__':
 	elif fetch_args.v:
 		print("Current version: v{}".format(version))
 
-	elif fetch_args.co:
-		createConfig()
+	elif fetch_args.csl:
+		getShowList()
+
+	elif fetch_args.addshow:
+		addCustomShow(fetch_args.addshow)
 
 	else:
 		auto()

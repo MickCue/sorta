@@ -1,5 +1,27 @@
 **sorTA CHANGELOG**
+
 ____________________
+# Version: 1.4
+# Date: November , 2018
+
+
+#   Updates
++ 	Adding Config JSON on next build, for saving Shows 
++ 	Specify correct Show e.g mitm.s01e01 should go into folder 'Movie In The Moon'
+	sorta.py -s "mitm:Movie In The Moon"
++	RegExp changes, still flagging, added ToDo
++	Bump to 1.4
++	Updated Logo
++	Changed parser... - for one letter, -- for greater the 2 letters
++	Experiment with colors
+
+#   Backlog ToDo
++	FLAG message still there, reverted back to old regexp
++ 	Use Lists instead of Strings for: extensions_regexp1
++ 	BBC.Show --> Bbc Show Folder | Fix to Upper
++ 	Clean titles, easy to implement, check f and remove junk between S01E05(.*).mp4
++	When sorted, give option to export file with moved files and output console
+________________________________________
 # Version: 1.2.4.1
 # Date: October 10th, 2018
 

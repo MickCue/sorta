@@ -13,6 +13,14 @@ ___
 ### Installation & Usage
 
 SorTA requires Python v3 to run.
+Recommend adding sorTA.py to path (Enviromental Variable)
+
+Add Show (One at a time):
+--addshow "xyz:Xero Yi Zone"
+
+Specficy Unmatched Show (One at a time/Multiple):
+-s "xyz"
+-s "xyz:abc:pcb" # Matches media files begining with these
 
 Specify path to sort:
 
@@ -30,6 +38,22 @@ user@host: sorta.py -s xyz
 Queue Episodes for watching inside season folder, e.g /XYZ/Season 1/Episodes/'''FILES DROPPED HERE''':
 ```sh
 user@host: sorta.py -qe
+```
+
+Misc Examples
+
+Match media filename that begins with "xyz" and sort into folder "xyz" that is in a specific path:
+
+```sh
+user@host: sorta.py -s "xyz" -p /home/shows/
+
+```
+
+Match media "xyz" and name it "Xero Yi Zone" which will create folder with that name and move "xyz" into it:
+
+```sh
+user@host: sorta.py --addshow "xyz:Xero Yi Zone" 
+
 ```
 
 ___
