@@ -1,6 +1,28 @@
 **sorTA CHANGELOG**
 
 ____________________
+# Version: 1.4.1
+# Date: November , 2018
+
+
+#   Updates
++ 	Adding Config JSON for saving Shows 
++	Fixed regular expression (Flag error)
++	Added Logo for -p
++	Added colour variables
++	Using realpath, fixed some issues when in certain directories
++	Added SET & GET methods for movie locations (Win/Unix)
++	Show List, Add Shows and check if show is added.
++	Added -p check for when queueing episodes (uses -p for directory chose)
++	Seasons beginning with zero is removed (01,02,03...etc)
++	Updated match and groups for new regexp
+
+#   Backlog ToDo
++ 	Use Lists instead of Strings for: extensions_regexp1
++ 	BBC.Show --> Bbc Show Folder | Fix to Upper
++ 	Clean titles, easy to implement, check f and remove junk between S01E05(.*).mp4
++	When sorted, give option to export file with moved files and output console
+____________________
 # Version: 1.4
 # Date: November , 2018
 
