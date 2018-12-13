@@ -40,7 +40,7 @@ CGRE = '\33[92m'
 
 
 #{Release}{Minor}{Patches}
-version = '1.4.1'
+version = '1.4.2'
 date_released = 'v1.4 Released: November 9th 2018'
 
 
@@ -425,8 +425,18 @@ def removeLetter_S(t, s, e):
 	if fetch_args.s:
 		move(t.rstrip(), s, e)
 	else:
-		#print('\033[92m' + "++v1 Messages:move(t.title().rstrip(), s, e):" + '\033[0m' + t.title().rstrip(), s, e)
-		move(t.title().rstrip(), s, e)
+		#print('\033[92m' + "++version1 Messages:move(t.title().rstrip(), s, e):" + '\033[0m' + t.title().rstrip(), s, e)
+		
+		tR = checkShowInList(t)
+	
+		if t.rstrip() != tR.rstrip():
+			if t.lower().rstrip() == tR.lower().rstrip():
+				print("tR")
+				move(tR.rstrip(), s, e)
+		else:
+			print("t")
+			move(t.title().rstrip(), s, e)
+
 
 
 def match(filename_str):
