@@ -40,7 +40,7 @@ CGRE = '\33[92m'
 
 
 #{Release}{Minor}{Patches}
-version = '1.4.2'
+version = '1.4.3'
 date_released = 'v1.4 Released: November 9th 2018'
 
 
@@ -431,10 +431,8 @@ def removeLetter_S(t, s, e):
 	
 		if t.rstrip() != tR.rstrip():
 			if t.lower().rstrip() == tR.lower().rstrip():
-				print("tR")
 				move(tR.rstrip(), s, e)
 		else:
-			print("t")
 			move(t.title().rstrip(), s, e)
 
 
