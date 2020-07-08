@@ -3,7 +3,7 @@
 SorTA - Powerful Tv Show Sorter
 @MickCue
 
-2018
+2018-2020
 """
 
 import re
@@ -40,7 +40,7 @@ CGRE = '\33[92m'
 
 
 #{Release}{Minor}{Patches}
-version = '1.4.3'
+version = '1.4.4'
 date_released = 'v1.4 Released: November 9th 2018'
 
 
@@ -177,8 +177,6 @@ def getMovieLocation():
 				exit()
 				
 
-
-
 def getCurrentDirectory():
 	dirPath = os.getcwd()
 	return dirPath
@@ -252,7 +250,6 @@ def listFiles(path):
 
 	if qe_show_count > 0:
 		print("Success: Queued {} episodes".format(qe_show_count))
-
 
 
 def isWin(title, s, f):
@@ -443,11 +440,8 @@ def match(filename_str):
 	global season_str
 	global movie_count
 
-
-
 	m = re.match(regexp1, filename_str)
 	
-
 	if m is not None:
 		if m.group(10):
 			print(m.group(10))

@@ -1,4 +1,5 @@
 testing/
+Session.vim
 config.ini
 diff.py
 showList.json
