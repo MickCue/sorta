@@ -18,7 +18,7 @@ Recommend adding sorTA.py to path (Enviromental Variable)
 Add Show (One at a time):
 --addshow "The.TV.SHOW:Xero Yi Zone"
 
-Specficy Unmatched Show (One at a time/Multiple):
+Specify Unmatched Show (One at a time/Multiple):
 -s "The.TV.SHOW"
 -s "The.TV.SHOW:abc:pcb" # Matches media files begining with these
 

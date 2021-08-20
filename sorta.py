@@ -3,7 +3,7 @@
 SorTA - Powerful Tv Show Sorter
 @MickCue
 
-2018-2020
+2018-2021
 """
 
 import re
@@ -40,7 +40,7 @@ CGRE = '\33[92m'
 
 
 #{Release}{Minor}{Patches}
-version = '1.4.4'
+version = '1.4.5'
 date_released = 'v1.4 Released: November 9th 2018'
 
 
