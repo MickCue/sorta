@@ -3,7 +3,7 @@
 SorTA - Powerful Tv Show Sorter
 @MickCue
 
-2018-2021
+2018-2022
 """
 
 import re
@@ -40,8 +40,8 @@ CGRE = '\33[92m'
 
 
 #{Release}{Minor}{Patches}
-version = '1.4.5'
-date_released = 'v1.4 Released: November 9th 2018'
+version = '1.5'
+date_released = 'Released: November 9th 2018'
 
 
 def dateStamp():
@@ -60,7 +60,7 @@ def createCuShJSON():
 
 	else:
 		print("Creating Custom Show List File")
-		
+
 		sortaPath = r'{}'.format(ds) # path to be created
 
 		config = os.path.join(sortaPath, 'showList.json')
@@ -100,7 +100,7 @@ def getloc():
 def checkShowInList(show):
 	#ds = os.path.dirname(__file__) # Directory of sorTA
 	ds = os.path.dirname(os.path.realpath(__file__))
-	
+
 	with open(ds+"/showList.json") as jsonData:
 		d = json.load(jsonData)
 		for x in d:
@@ -158,10 +158,10 @@ def getMovieLocation():
 	with open(ds+"/showList.json") as jsonData:
 		d = json.load(jsonData)
 
-		if os.name == 'nt':		
+		if os.name == 'nt':
 			winlC = d["sorTA-Movies"]["win"]
 			if os.path.exists(winlC):
-				return (d["sorTA-Movies"]["win"]) 
+				return (d["sorTA-Movies"]["win"])
 			else:
 				print(CRED + "Movie location not found" +CDEF)
 				print("Add Movie location using --addloc")
@@ -170,12 +170,12 @@ def getMovieLocation():
 		else:
 			unixlC = d["sorTA-Movies"]["unix"]
 			if os.path.exists(unixlC):
-				return (d["sorTA-Movies"]["unix"]) 
+				return (d["sorTA-Movies"]["unix"])
 			else:
 				print(CRED + "Movie location not found" + CDEF)
 				print("Add Movie location using --addloc")
 				exit()
-				
+
 
 def getCurrentDirectory():
 	dirPath = os.getcwd()
@@ -190,10 +190,10 @@ def checkDirectoryName(title):
 		# Match Group 2: /hm1/hm2/hm3/ will get hm3
 		# ^\/(.+\/)*(.+)(.+)$
 		if os.name == 'nt':
-			m = re.match('^[A-Z]:\\(.+\\)*(.+)(.+)$', fetch_args.p) #Win	
+			m = re.match('^[A-Z]:\\(.+\\)*(.+)(.+)$', fetch_args.p) #Win
 		else:
 			m = re.match('^\/(.+\/)*(.+)(.+)$', fetch_args.p) #Unix
-			
+
 		if m.group(2):
 			directory_name = m.group(2)
 
@@ -203,25 +203,68 @@ def checkDirectoryName(title):
 	directory_name = directory_name.strip()
 
 	if re.search(title, directory_name, re.IGNORECASE):
-		#print("In Show Folder")	
+		#print("In Show Folder")
 		return "Show"
 
 	elif directory_name.startswith("Season"):
-		#print("In Season Folder")	
+		#print("In Season Folder")
 		return "Season"
 
 	else:
-		#print("New Show")	
+		#print("New Show")
 		return "New"
 
 
 def cleanTitle(name):
 	tmp_name = name.replace(".", " ")
 	tmp_name = tmp_name.replace("-", " ")
+
 	return tmp_name
 
 
+def reverse_case(match_obj):
+	#print("CHAR:"+match_obj)
+	char_elem = match_obj.group(0)
+	if char_elem.islower():
+		return char_elem.upper()
+	else:
+		return char_elem.lower()
+
+
 def listFiles(path):
+
+	files = os.listdir(path)
+
+	if fetch_args.f:
+		for index, file in enumerate(files):
+			# Match 1st letter for uppercase
+			file2 = re.sub(r"(?!s\d)(?!mp4|avi|mkv)(\b[a-z])", reverse_case, file)
+			if file2:
+				if os.name == 'nt':
+					os.rename(path+"\\"+file, path+"\\"+file2)
+					file=file2
+				else:
+					os.rename(path+"/"+file, path+"/"+file2)
+					file=file2
+
+			orgfile = file
+			rgs = re.sub("(s)(?=\d)", "S", file)
+			if rgs:
+				file = rgs
+				rge = re.sub("(e)(?=\d)", "E", file)
+				if rge:
+					file = rge
+					#os.rename(path+orgfile, path+file)
+					if os.name == 'nt':
+						#print(path+"\\"+orgfile, path+"\\"+file)
+						os.rename(path+"\\"+orgfile, path+"\\"+file)
+					else:
+						#print(path+"/"+orgfile, path+"/"+file)
+						os.rename(path+"/"+orgfile, path+"/"+file)
+					#print(path+"/"+file)
+
+			#os.rename(path+file, path +'file_' + str(index)+ '.jpg')
+
 	onlyfiles = [f for f in listdir(path) if isfile(join(path, f))]
 	i = 0
 	f = 0
@@ -230,6 +273,7 @@ def listFiles(path):
 	if len(onlyfiles) == 1:
 		print(goodbye_msg)
 
+
 	while i < len(onlyfiles):
 
 		extenstion_check = onlyfiles[i]
@@ -237,14 +281,14 @@ def listFiles(path):
 			extensions_regexp1_tmp = extensions_regexp1.replace(".", "")
 			#r1 = re.compile('|'.join(extensions))
 			r1 = re.compile(extensions_regexp1_tmp)
-			if r1.search(onlyfiles[i]):		
+			if r1.search(onlyfiles[i]):
 				match(onlyfiles[i])
 				f += 1
 				if fetch_args.v1:
 					print('\033[92m' + "++v1 Messages:onlyfiles[i]:List Files:" + '\033[0m' + onlyfiles[i])
 		i += 1
 
-	print("Processed {} files/folders".format(f))		
+	print("Processed {} files/folders".format(f))
 	if movie_count >0 :
 		print("Success: Found {} movies".format(movie_count))
 
@@ -257,13 +301,13 @@ def isWin(title, s, f):
 	global directory_tree
 	global source
 	global custom_show_flag
-	global qe_show_count 
+	global qe_show_count
 
 	title = checkShowInList(title)
 
 
 	if fetch_args.v1:
-		print('\033[92m' + "++v1 Messages:isWin title,s,f:" + '\033[0m' + "Title:" + title + 
+		print('\033[92m' + "++v1 Messages:isWin title,s,f:" + '\033[0m' + "Title:" + title +
 			"s:" + s + "f:" + f)
 
 
@@ -322,7 +366,7 @@ def isWin(title, s, f):
 
 	elif checkDirectoryName(title) == "New":
 		#Clean Up titles
-		title = re.sub(r'[^\w]', ' ', title) 
+		title = re.sub(r'[^\w]', ' ', title)
 
 		if os.name == 'nt':
 			source = directory_chose+'\\'+f
@@ -330,7 +374,7 @@ def isWin(title, s, f):
 				directory_tree = directory_chose+'\\'+title
 
 			#If qe, move files into season/episode folder
-			elif fetch_args.qe: 
+			elif fetch_args.qe:
 				qe_show_count += 1
 				directory_tree = directory_chose+'\\'+title+'\\Season '+s+'\\Episodes'
 
@@ -343,19 +387,19 @@ def isWin(title, s, f):
 			else:
 				directory_tree = directory_chose+'\\'+title+'\\Season '+s
 				dest = directory_tree+"\\"+f
-			
-	
+
+
 		else:
 			source = directory_chose+'/'+f
 			if s == "":
 				directory_tree = directory_chose+'/'+title
 			#If qe, move files into season/episode folder
-			elif fetch_args.qe: 
+			elif fetch_args.qe:
 				qe_show_count += 1
 				directory_tree = directory_chose+'/'+title+'/Season '+s+'/Episodes'
 			else:
 				directory_tree = directory_chose+'/'+title+'/Season '+s
-			
+
 			dest = directory_tree+"/"+f
 			if fetch_args.s and custom_show_flag == True:
 				source = directory_chose+'/'+f
@@ -366,25 +410,28 @@ def isWin(title, s, f):
 
 def move(title, s, f):
 
-	isWin(title, s, f)	
+	isWin(title, s, f)
+
 
 	if os.path.exists(dest):
 			print("File {} already exists inside folder /{}".format(f, title))
 
+
 	elif not os.path.exists(directory_tree):
-		os.makedirs(directory_tree)			
+		os.makedirs(directory_tree)
 		shutil.move(source,dest)
-	
+
 	elif os.path.exists(directory_tree):
-		
+
 		if not os.path.exists(dest):
+
 			os.rename(source, dest)
 
 
 def moveMovie(source, movie):
-	
+
 	if fetch_args.m:
-		directory_chose = getCurrentDirectory()	
+		directory_chose = getCurrentDirectory()
 
 		# If path is set:
 		if fetch_args.p:
@@ -395,13 +442,14 @@ def moveMovie(source, movie):
 			print('\033[92m' + "Moving From:" + '\033[0m' + getCurrentDirectory()+"/"+movie)
 			print('\033[92m' + "Moving To:"+ '\033[0m' + getMovieLocation()+movie)
 			shutil.move(getCurrentDirectory()+"/"+movie,getMovieLocation()+movie)
-			
+
 
 
 def removeLetter_S(t, s, e):
 
 	#print('\033[92m' + "++v1 Messages:removeLetter_S:" + '\033[0m' + "Title: *{}* Season: *{}* Filename: *{}* \
 	#	".format(t,s,e))
+
 
 	if s.startswith("S0"):
 		s = s.replace("S0", "")
@@ -423,9 +471,11 @@ def removeLetter_S(t, s, e):
 		move(t.rstrip(), s, e)
 	else:
 		#print('\033[92m' + "++version1 Messages:move(t.title().rstrip(), s, e):" + '\033[0m' + t.title().rstrip(), s, e)
-		
+
+
+
 		tR = checkShowInList(t)
-	
+
 		if t.rstrip() != tR.rstrip():
 			if t.lower().rstrip() == tR.lower().rstrip():
 				move(tR.rstrip(), s, e)
@@ -441,7 +491,7 @@ def match(filename_str):
 	global movie_count
 
 	m = re.match(regexp1, filename_str)
-	
+
 	if m is not None:
 		if m.group(10):
 			print(m.group(10))
@@ -451,7 +501,7 @@ def match(filename_str):
 			#	#print("The group {} and the return {}".format(m.group(8), show_name))
 			if fetch_args.s:
 				custom_show = fetch_args.s
-				
+
 				if ":" in fetch_args.s:
 					custom_show = custom_show.split(":")
 					for i in range(len(custom_show)):
@@ -488,9 +538,9 @@ def match(filename_str):
 				season_str = season_str[1:]
 
 
-		# Used for movies 
+		# Used for movies
 		elif m.group(8):
-			
+
 			if m.group(8) != checkShowInList(m.group(8)):
 				print("Found Custom Show ({}) for: {}".format(checkShowInList(m.group(8)), m.group(8)))
 				show_name = checkShowInList(m.group(8)) # Check if unmatched is in show list json
@@ -501,10 +551,10 @@ def match(filename_str):
 				if fetch_args.m:
 					moveMovie(getMovieLocation(), filename_str)
 
-			
+
 			if fetch_args.s:
 				custom_show = fetch_args.s
-				
+
 				if ":" in fetch_args.s:
 					custom_show = custom_show.split(":")
 					for i in range(len(custom_show)):
@@ -522,26 +572,26 @@ def match(filename_str):
 						print("Found Show:"+custom_show)
 						show_name = custom_show
 						season_str = ""
-		
+
 		if not cleanTitle(show_name) == "":
 
 			removeLetter_S(cleanTitle(show_name), season_str, filename_str)
 			show_name = ""
 			season_str = ""
 
-		
+
 def logo():
 	print("""
   ______                    """+'\033[94m'+"""________   ______"""+'\033[0m'+"""
- /      \                  """+'\033[94m'+"""|        \ /      \\"""+'\033[0m'+""" 
+ /      \                  """+'\033[94m'+"""|        \ /      \\"""+'\033[0m'+"""
 |  $$$$$$\  ______    ______"""+'\033[94m'+"""\$$$$$$$$|  $$$$$$\\"""+'\033[0m'+"""
 | $$___\$$ /      \  /      \ """+'\033[94m'+"""| $$   | $$__| $$"""+'\033[0m'+"""
  \$$    \ |  $$$$$$\|  $$$$$$\\"""+'\033[94m'+"""| $$   | $$    $$"""+'\033[0m'+"""
  _\$$$$$$\| $$  | $$| $$   \$$"""+'\033[94m'+"""| $$   | $$$$$$$$"""+'\033[0m'+"""
 |  \__| $$| $$__/ $$| $$      """+'\033[94m'+"""| $$   | $$  | $$"""+'\033[0m'+"""
  \$$    $$ \$$    $$| $$      """+'\033[94m'+"""| $$   | $$  | $$"""+'\033[0m'+""" v"""+version+"""
-  \$$$$$$   \$$$$$$  \$$       """+'\033[94m'+"""\$$    \$$   \$$"""+'\033[0m'+"""  
-			                                   
+  \$$$$$$   \$$$$$$  \$$       """+'\033[94m'+"""\$$    \$$   \$$"""+'\033[0m'+"""
+
 *************************************""")
 	print(date_released)
 	print("\nUSE:\nsorta.py -p \"/home/desktop\" <- Specfiy Path \
@@ -554,7 +604,7 @@ def auto():
 	logo()
 	createCuShJSON()
 	global directory_chose
-	global savem 
+	global savem
 	print("\nCurrent Directory: "+getCurrentDirectory())
 
 	if fetch_args.qe:
@@ -580,7 +630,7 @@ def auto():
 					res3 = input('Enter Location:')
 					saveMovieLocation(res3)
 
-		directory_chose = getCurrentDirectory()		
+		directory_chose = getCurrentDirectory()
 		listFiles(getCurrentDirectory())
 	elif option_3 == "n":
 		directory_chose_1 = input('Please enter path e.g (C://User..): ')
@@ -610,6 +660,7 @@ if __name__ == '__main__':
 
 	parser = argparse.ArgumentParser(description='sorTA | Powerful TV Show Sorter')
 	parser.add_argument('-p', dest='p', help='Path to sort')
+	parser.add_argument('-f', dest='f', help='Fix titles e.g s01 -> S02 & upper show names', action='store_true')
 	parser.add_argument('-v', dest='v', help='Show version details', action='store_true')
 	parser.add_argument('-m', dest='m', help='Move movies to this location', action='store_true')
 	parser.add_argument('-s', dest='s', help='Specify unmatched shows')

@@ -1,4 +1,10 @@
 **sorTA CHANGELOG**
+____________________
+# Version: 1.5
+# Date: Stepember , 2022
+#   Updates
++   Cleaned titles option added. Use the option -f to uppercase show name to Show Name and s00e00 to S00E00
+
 
 ____________________
 # Version: 1.4.*
@@ -11,7 +17,7 @@ ____________________
 
 
 #   Updates
-+ 	Adding Config JSON for saving Shows 
++ 	Adding Config JSON for saving Shows
 +	Fixed regular expression (Flag error)
 +	Added Logo for -p
 +	Added colour variables
@@ -33,7 +39,7 @@ ____________________
 
 
 #   Updates
-+ 	Adding Config JSON on next build, for saving Shows 
++ 	Adding Config JSON on next build, for saving Shows
 + 	Specify correct Show e.g mitm.s01e01 should go into folder 'Movie In The Moon'
 	sorta.py -s "mitm:Movie In The Moon"
 +	RegExp changes, still flagging, added ToDo
@@ -58,7 +64,7 @@ ________________________________________
 
 #   Backlog ToDo
 + 	Use Lists instead of Strings for: extensions_regexp1
-+ 	Adding Config JSON on next build, for saving Shows 
++ 	Adding Config JSON on next build, for saving Shows
 + 	BBC.Show --> Bbc Show Folder | Fix to Upper
 + 	When moving files into episode folder while inside season folder, ignore Show name folder
 + 	When moving shorten names add parameter to specify correct Show e.g mitm.s01e01 should go into folder 'Movie In The Moon'
@@ -79,7 +85,7 @@ ________________________________________
 
 #   Backlog ToDo
 + 	Use Lists instead of Strings for: extensions_regexp1
-+ 	Adding Config JSON on next build, for saving Shows 
++ 	Adding Config JSON on next build, for saving Shows
 + 	BBC.Show --> Bbc Show Folder | Fix to Upper
 + 	When moving files into episode folder while inside season folder, ignore Show name folder
 + 	When moving shorten names add parameter to specify correct Show e.g mitm.s01e01 should go into folder 'Movie In The Moon'
@@ -97,14 +103,14 @@ ____________________
 -- 	Added feature to move epiosdes into directory called episodes, used to track unwatched | sorta -qe (will move files into episode directory)
 -- 	Added CHANGELOG for issue tracking
 -- 	Wiki Documention, will complete fully for 1.3
--- 	Config foundation: unix path added for config location and new para argument for testing. 
+-- 	Config foundation: unix path added for config location and new para argument for testing.
 -- 	Removed old Config functions
 -- 	Changed checkDirectoryName to use RegExp for one condition
 -- 	Removed boolean for checkDirectoryName, string based
 -- 	Cleand Show title, issues with spaces fixed with regexp
 
 #   ToDo Next
-+ 	Adding Config JSON on next build, for saving Shows 
++ 	Adding Config JSON on next build, for saving Shows
 + 	BBC.Show --> Bbc Show Folder | Fix to Upper
 ____________________
 # Version: 1.2.2
